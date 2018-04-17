@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.project.dao.HouseDao" >
+
+    <select id="getHousesFromLandlord" resultType="com.project.model.House">
+        select id,area,layer,room,structure,address,title,remark,rent,time,landlord,tenant,status,picture
+        from houses
+        WHERE landlord = #{userId}
+    </select>
+
+    <select id="getHousesFromTenant" resultType="com.project.model.House">
+        select id,area,layer,room,structure,address,title,remark,rent,time,landlord,tenant,status,picture
+        from houses
+        WHERE tenant = #{userId}
+    </select>
+
+    <select id="getHousesFromManager" resultType="com.project.model.House">
+        select id,area,layer,room,structure,address,title,remark,rent,time,landlord,tenant,status,picture
+        from houses
+    </select>
+
+    <!-- 新增用户 -->
+    <insert id="createHouse" parameterType="com.project.model.House" >
+        insert into houses
+        (area,layer,room,structure,address,title,remark,rent,time,landlord,status,picture)
+        values
+        (#{area}, #{layer},#{room},#{structure},#{address},#{title}, #{remark}, #{rent}, #{time}, #{landlord}, #{status},#{picture})
+    </insert>
+
+    <!--删除该房子-->
+    <delete id="deleteHouse" parameterType="int">
+        DELETE FROM houses WHERE id = #{houseId}
+    </delete>
+
+    <!--查找用户-->
+    <select id="getHouse" resultType="com.project.model.House" parameterType="int">
+        select id,area,layer,room,structure,address,title,remark,rent,time,landlord,tenant,status,picture
+        from houses
+        where id = #{houseId}
+    </select>
+
+    <!-- 更新用户信息-->
+    <update id="UpdateHouse" parameterType="com.project.model.House" >
+        update houses
+        <set >
+            <if test="area != null and area != ''" >
+                area = #{area},
+            </if>
+            <if test="layer != null  and layer != ''" >
+                layer = #{layer},
+            </if>
+            <if test="room != null and room != ''" >
+                room = #{room},
+            </if>
+            <if test="structure != null  and structure != ''" >
+                structure = #{structure},
+            </if>
+            <if test="address != null  and address != ''" >
+                address = #{address},
+            </if>
+            <if test="title != null and title != ''" >
+                title = #{title},
+            </if>
+            <if test="remark != null and remark != '' " >
+                remark = #{remark},
+            </if>
+            <if test="rent != null" >
+                rent = #{rent},
+            </if>
+            <if test="time != null and time != '' " >
+                time = #{time},
+            </if>
+            <if test="tenant != null" >
+                tenant = #{tenant},
+            </if>
+            <if test="landlord != null" >
+                landlord = #{landlord},
+            </if>
+            <if test="status != null " >
+                status = #{status},
+            </if>
+            <if test="picture != null and picture != '' " >
+                picture = #{picture},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <select id="totalRents" resultType="double">
+        select  sum(rent )
+        from houses
+        WHERE landlord = #{landlord} and tenant != -1
+    </select>
+
+</mapper>

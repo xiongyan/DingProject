@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.project.dao.UserDao" >
+
+    <select id="getUsersFromLandlord" resultType="com.project.model.User" parameterType="int">
+        select id,name,gender,email,password,phone,status,role,remark,idCard,insertDate
+        from users
+        where status = 1 and role = 'tenant' and id in (select tenant from tenant_landlord where landlord = #{landlord})
+    </select>
+
+    <select id="getUsersFromManager" resultType="com.project.model.User">
+        select id,name,gender,email,password,phone,status,role,remark,idCard,insertDate
+        from users
+        where status = 1 and role = #{role}
+    </select>
+
+    <!--查找用户-->
+    <select id="findUserByPhone" resultType="com.project.model.User" parameterType="string">
+        select id,name,gender,email,password,phone,status,role,remark,idCard,insertDate
+        from users
+        where phone = #{phone} and status = 1
+    </select>
+
+    <!--用户登录-->
+    <select id="findUserByNameAndPwd" resultType="com.project.model.User" parameterType="map" >
+        select id,name,gender,email,password,phone,status,role,remark,idCard,insertDate
+        from users
+        where phone = #{phone} and password = #{password} and status = 1
+    </select>
+
+    <!-- 新增用户 -->
+    <insert id="createUser" parameterType="com.project.model.User" >
+        insert into users
+        (name,gender,email,password,phone,status,role,remark,idCard,insertDate)
+        values
+        (#{name}, #{gender},#{email},#{password},#{phone},#{status}, #{role}, #{remark}, #{idCard},#{insertDate})
+    </insert>
+
+    <!--删除该用户-->
+    <!--<delete id="deleteUser" parameterType="int">
+        DELETE FROM users WHERE id = #{userId}
+    </delete>-->
+    <update id="deleteUser" parameterType="int" >
+        update users
+        <set >
+            status = 0
+        </set>
+        where id = #{userId}
+    </update>
+
+    <select id="getUser" resultType="com.project.model.User" parameterType="map">
+        select id,name,gender,email,password,phone,status,role,remark,idCard,insertDate
+        from users
+        WHERE id = #{id}
+    </select>
+
+    <!-- 更新用户信息-->
+    <update id="updateUser" parameterType="com.project.model.User" >
+        update users
+        <set >
+            <if test="name != null and name != ''" >
+                name = #{name},
+            </if>
+            <if test="gender != null  and gender != ''" >
+                gender = #{gender},
+            </if>
+            <if test="email != null and email != ''" >
+                email = #{email},
+            </if>
+            <if test="password != null  and password != ''" >
+                password = #{password},
+            </if>
+            <if test="phone != null  and phone != ''" >
+                phone = #{phone},
+            </if>
+            <if test="status != null" >
+                status = #{status},
+            </if>
+            <if test="role != null and remark != ''" >
+                role = #{role},
+            </if>
+            <if test="remark != null and remark != '' " >
+                remark = #{remark},
+            </if>
+            <if test="idCard != null and idCard != '' " >
+                idCard = #{idCard},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!-- 新增用户和房子关系 -->
+    <insert id="createRelationWithLandlord" parameterType="map" >
+        insert into  tenant_landlord
+        (tenant,landlord)
+        VALUES (#{tenant},#{landlord})
+    </insert>
+
+    <!-- 删除用户和房子关系 -->
+    <delete id="deleteRelationWithLandlord" parameterType="map" >
+        DELETE FROM tenant_landlord WHERE tenant = #{tenant} and landlord = #{landlord}
+    </delete>
+
+    <!-- 实际房东收房租 -->
+    <select id="actualPayment" resultType="com.project.model.Account" parameterType="map">
+        select landlord as userId , sum(rent) as total
+        from pay_rent
+        WHERE landlord = #{landlord} and time BETWEEN #{startTime} and #{endTime}
+    </select>
+
+</mapper>
