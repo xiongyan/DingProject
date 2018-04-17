@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.project.dao.DepartmentDao" >
+
+    <select id="getDepartment" resultType="com.project.model.Department" parameterType="string">
+        select *
+        from department
+        where title = #{title}
+    </select>
+
+    <!--新建部门 -->
+    <insert id="createDepartment" parameterType="com.project.model.Department" >
+        insert into department
+        (id,title)
+        values
+        (#{id}, #{title})
+    </insert>
+
+</mapper>
