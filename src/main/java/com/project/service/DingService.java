@@ -11,5 +11,11 @@ public interface DingService {
      */
     Object getThirdAppList();
 
+    /**
+     * 获取获取打卡记录
+     * @return
+     */
+    Object getRecordList(int department);
+
 }
 

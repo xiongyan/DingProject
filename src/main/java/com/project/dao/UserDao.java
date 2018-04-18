@@ -1,6 +1,5 @@
 package com.project.dao;
 
-import com.project.model.Account;
 import com.project.model.User;
 
 import java.util.List;
@@ -14,13 +13,7 @@ public interface UserDao {
      * 获取用户列表
      * @return
      */
-    List<User> getUsersFromLandlord(int landlord);
-
-    /**
-     * 获取用户列表
-     * @return
-     */
-    List<User> getUsersFromManager(String role);
+    List<User> getUsers();
 
     /**
      * if user exit by email
@@ -28,20 +21,6 @@ public interface UserDao {
      * @return
      */
     User findUserByPhone(String phone);
-
-    /**
-     * if user exit by id
-     * @param id
-     * @return
-     */
-    User getUser(int id);
-
-    /**
-     * 用户登陆查询
-     * @param parameter
-     * @return
-     */
-    User findUserByNameAndPwd(Map<String, String> parameter);
 
     /**
      * create a new user
@@ -58,6 +37,13 @@ public interface UserDao {
     int deleteUser(int userId);
 
     /**
+     * if user exit by id
+     * @param id
+     * @return
+     */
+    User getUser(int id);
+
+    /**
      * delete user
      * @param user
      * @return
@@ -65,23 +51,9 @@ public interface UserDao {
     int updateUser(User user);
 
     /**
-     * 绑定用户和房东的关系
+     * 用户登陆查询
      * @param parameter
      * @return
      */
-    int createRelationWithLandlord(Map<String, Object> parameter);
-
-    /**
-     * delete用户和房东的关系
-     * @param parameter
-     * @return
-     */
-    int deleteRelationWithLandlord(Map<String, Object> parameter);
-
-    /**
-     * 实际房东收房租金额
-     * @param parameter
-     * @return
-     */
-    Account actualPayment(Map<String, Object> parameter);
+    User findUserByNameAndPwd(Map<String, String> parameter);
 }

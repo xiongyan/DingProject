@@ -1,6 +1,7 @@
 package com.project.service.impl;
 
 import com.project.model.App;
+import com.project.model.Record;
 import com.project.model.RespEntity;
 import com.project.service.DingService;
 import com.project.util.DingUtil;
@@ -10,7 +11,9 @@ import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -40,6 +43,75 @@ public class DingServiceImpl implements DingService {
         respEntity.setCode(code);
         respEntity.setMsg(msg);
         return respEntity;
+    }
+
+    /**
+     * 获取获取打卡记录
+     * @return
+     */
+    public Object getRecordList(int department){
+        int code = 500;
+        String msg = "查询出错";
+        try {
+            SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(format2.parse("2018-04-08 00:00:00"));
+            long startTime = cal.getTimeInMillis();
+            cal.setTime(format2.parse("2018-04-08 23:59:59"));
+            long endTime = cal.getTimeInMillis();
+            DingUtil dingUtil = DingUtil.getInstance();
+            JSONArray res = dingUtil.gitRecordList(department,startTime,endTime);
+            if(res == null){
+                respEntity.setData(null);
+            }else {
+                code = 200;
+                msg = "查询成功";
+                respEntity.setData(jsonToRecords(res));
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        respEntity.setCode(code);
+        respEntity.setMsg(msg);
+        return respEntity;
+    }
+
+    /**
+     * 由于序列化，需要将JSONArray转成List<Record>
+     * @param array
+     * @return
+     */
+    public List<Record> jsonToRecords(JSONArray array){
+        List<Record> list = null;
+        if(array != null){
+            JsonUtil obj = new JsonUtil(new JSONObject());
+            list = new ArrayList<>();
+            for(int i = 0;i<array.length();i++){
+                JsonUtil tmp = new JsonUtil((JSONObject)array.get(i));
+                if(!obj.getStringOrElse("userId").equalsIgnoreCase(tmp.getStringOrElse("userId"))){
+                    Record record = new Record();
+                    record.setDetailPlace(tmp.getStringOrElse("detailPlace"));
+                    record.setLatitude(tmp.getDoubbleOrElse("latitude",0.0));
+                    record.setName(tmp.getStringOrElse("name"));
+                    record.setRemark(tmp.getStringOrElse("remark"));
+                    record.setPlace(tmp.getStringOrElse("place"));
+                    record.setUserId(tmp.getStringOrElse("userId"));
+                    record.setTimestamp(tmp.getLongOrElse("timestamp",0));
+                    record.setLongitude(tmp.getDoubbleOrElse("longitude", 0.0));
+                    JSONArray arys = tmp.getJSONArray("imageList", null);
+                    if(arys.length() > 0){
+                        List<String> listImage = new ArrayList<>();
+                        for(int j= 0;j<arys.length();j++){
+                            listImage.add(arys.getString(j));
+                        }
+                        record.setImageList(listImage);
+                    }
+                    list.add(record);
+                    obj = tmp;
+                }
+            }
+        }
+        return list;
     }
 
     /**

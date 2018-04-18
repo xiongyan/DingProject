@@ -1,5 +1,6 @@
 package com.project.util;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
@@ -26,6 +27,20 @@ public class JsonUtil {
     }
 
     /**
+     * 获取long值如果不存在返回默认值
+     * @param key
+     * @param defaultVal
+     * @return
+     */
+    public long getLongOrElse(String key,long defaultVal){
+        if(json.has(key)){
+            return json.getLong(key);
+        }else {
+            return defaultVal;
+        }
+    }
+
+    /**
      * 获取String值如果不存在返回默认值
      * @param key
      * @param defaultVal
@@ -48,6 +63,20 @@ public class JsonUtil {
     public int getIntOrElse(String key,int defaultVal){
         if(json.has(key)){
             return json.getInt(key);
+        }else {
+            return defaultVal;
+        }
+    }
+
+    /**
+     * 获取JSONArray值如果不存在返回默认值
+     * @param key
+     * @param defaultVal
+     * @return
+     */
+    public JSONArray getJSONArray(String key,JSONArray defaultVal){
+        if(json.has(key)){
+            return json.getJSONArray(key);
         }else {
             return defaultVal;
         }
