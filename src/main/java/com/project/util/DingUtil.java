@@ -166,6 +166,27 @@ public class DingUtil {
         return result;
     }
 
+    /**
+     *获取部门打卡记录
+     * @param department
+     * @return
+     */
+    public JSONArray gitRecordList(int department,long startTime,long endTime){
+        JSONArray result = null;
+        try {
+            String token = getToken(CORPID,CORPSECRET);
+            HttpUtil httpUtil = new HttpUtil();
+            String url = "https://oapi.dingtalk.com/checkin/record?access_token="+token+"&department_id="+department+"&start_time="+startTime+"&end_time="+endTime;
+            JSONObject res = new JSONObject(httpUtil.get(url));
+            if(res.getInt("errcode") == 0){
+                result = res.getJSONArray("data");
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return result;
+    }
+
 
     public static void main(String args[]){
         DingUtil dingUtil = DingUtil.getInstance();

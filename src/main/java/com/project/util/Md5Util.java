@@ -3,6 +3,8 @@ package com.project.util;
 import org.springframework.stereotype.Component;
 
 import java.security.MessageDigest;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 /**
  * Created by laishun on 2018/3/12.
@@ -37,9 +39,16 @@ public class Md5Util {
         return ret.toString();
     }
 
-    public static void main(String[] args) {
-        Md5Util md = new Md5Util();
-        System.out.print(md.MD5("123"));
+    public static void main(String[] args) throws  Exception{
+        SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        /*Md5Util md = new Md5Util();
+        System.out.print(md.MD5("123"));*/
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(format2.parse("2018-04-08 00:00:00"));
+        System.out.println(cal.getTimeInMillis());
+
+        cal.setTime(format2.parse("2018-04-08 23:59:59"));
+        System.out.println(cal.getTimeInMillis());
     }
 
 }
