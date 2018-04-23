@@ -7,15 +7,18 @@ import com.dingtalk.api.response.CorpMessageCorpconversationAsyncsendResponse;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.security.MessageDigest;
+import java.util.Formatter;
+
 
 /**
  * Created by laishun on 2018/4/4.
  */
 public class DingUtil {
 
-    private static String CORPID = "ding31148f160c24897635c2f4657eb6378f"; // 企业Id
-    private static String CORPSECRET = "7RzFBvHzogkyN2NZ8jii8dyNrWHNCfJiKIHNnNrolWOARMuYfu9o9_YcsQ6jEQah"; // 企业应用的凭证密钥
-    private static Long   AGENTID = 169284840L;//微应用的ID
+    public static String CORPID = "ding31148f160c24897635c2f4657eb6378f"; // 企业Id
+    public static String CORPSECRET = "7RzFBvHzogkyN2NZ8jii8dyNrWHNCfJiKIHNnNrolWOARMuYfu9o9_YcsQ6jEQah"; // 企业应用的凭证密钥
+    public static Long   AGENTID = 169284840L;//微应用的ID
     private static DingUtil dingUtil = null;
     private static HttpUtil httpUtil = null;
 
@@ -51,6 +54,78 @@ public class DingUtil {
             e.printStackTrace();
         }
         return null;
+    }
+
+    /**
+    * 向网页请求ticket值，用Get方式请求网页
+    * param:
+    *   access_token:上面得到的access_token值
+    * return:
+    *   返回值是ticket
+    */
+    public String getTicket(){
+        String token = getToken(CORPID,CORPSECRET);
+        HttpUtil httpUtil = new HttpUtil();
+        String url="https://oapi.dingtalk.com/get_jsapi_ticket?access_token="+token;
+        JSONObject res=new JSONObject(httpUtil.get(url));
+        String ticket="";
+        if(res.has("ticket")){
+            ticket=res.getString("ticket");
+        }
+        return ticket;
+    }
+
+    /**
+     * 根据usierid获取用户信息
+     * @param userId
+     * @return
+     */
+    public JSONObject getUser(String userId){
+        String token = getToken(CORPID,CORPSECRET);
+        HttpUtil httpUtil = new HttpUtil();
+        String url="https://oapi.dingtalk.com/user/get?access_token="+token+"&userid=zhangsan"+userId;
+        JSONObject res=new JSONObject(httpUtil.get(url));
+        if(res.getInt("errcode") == 0){
+            return res;
+        }else{
+            return null;
+        }
+    }
+
+    /**
+    * 生成签名的函数
+    * params:
+    *   ticket:签名数据
+    *   nonceStr:签名用的随机字符串，从properties文件中读取
+    *   timeStamp:生成签名用的时间戳
+    *   url:当前请求的URL地址
+    */
+    public String getSign(String ticket, String nonceStr, long timeStamp, String url) throws Exception {
+        String plain = "jsapi_ticket=" + ticket + "&noncestr=" + nonceStr + "×tamp=" + String.valueOf(timeStamp)
+                + "&url=" + url;
+        MessageDigest sha1 = null;
+        try {
+            sha1 = MessageDigest.getInstance("SHA-1");    //安全hash算法
+            sha1.reset();
+            sha1.update(plain.getBytes("UTF-8"));         //根据参数产生hash值
+            return bytesToHex(sha1.digest());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * 将bytes类型的数据转化为16进制类型
+     */
+    private static String bytesToHex(byte[] hash) {                    //将字符串转化为16进制的数据
+        Formatter formatter = new Formatter();
+        for (byte b : hash) {
+            formatter.format("%02x", b);
+        }
+        String result = formatter.toString();
+        formatter.close();
+        return result;
     }
 
 

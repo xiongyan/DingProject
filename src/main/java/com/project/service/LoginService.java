@@ -8,10 +8,9 @@ import com.project.model.User;
 public interface LoginService {
 
     /**
-     * 通过姓名和密码查询是否存在这个用户
-     * @param userName
-     * @param password
+     * 通过userId查询是否存在这个用户
+     * @param userId
      * @return
      */
-    User findUserByNameAndPwd(String userName, String password);
+    User findUserByUserId(String userId);
 }

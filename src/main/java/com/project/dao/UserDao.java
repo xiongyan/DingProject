@@ -51,9 +51,9 @@ public interface UserDao {
     int updateUser(User user);
 
     /**
-     * 用户登陆查询
-     * @param parameter
+     * 用户正确性检验
+     * @param userId
      * @return
      */
-    User findUserByNameAndPwd(Map<String, String> parameter);
+    User findUserByUserId(String userId);
 }
