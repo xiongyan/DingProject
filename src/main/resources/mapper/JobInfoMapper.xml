@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.project.dao.JobInfoDao" >
+
+    <select id="getJobInfos" resultType="com.project.model.JobInfo" >
+        select id,title,author,content,time
+        from jobinfo
+    </select>
+
+    <!-- 新增工作信息 -->
+    <insert id="createJobInfo" parameterType="com.project.model.JobInfo" >
+        insert into jobinfo
+        (title,author,content,time)
+        values
+        (#{title}, #{author},#{content},#{time})
+    </insert>
+
+    <!--删除工作信息-->
+    <delete id="deleteJobInfo" parameterType="int">
+        DELETE FROM jobinfo WHERE id = #{jobId}
+    </delete>
+
+    <select id="getJobInfo" resultType="com.project.model.JobInfo" parameterType="int">
+        select id,title,author,content,time
+        from users
+        WHERE id = #{jobId}
+    </select>
+
+    <!-- 更新job信息-->
+    <update id="UpdateJobInfo" parameterType="com.project.model.JobInfo" >
+        update users
+        <set >
+            <if test="title != null and title != ''" >
+                title = #{title},
+            </if>
+            <if test="author != null  and author != ''" >
+                author = #{author},
+            </if>
+            <if test="content != null and content != ''" >
+                content = #{content},
+            </if>
+            <if test="time != null and time != ''" >
+                time = #{time},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+</mapper>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.project.dao.AuditDao" >
+
+    <select id="getAudits" resultType="com.project.model.Audit" >
+        select id,jobInfoId,time,userName,userId,townAuth,countyAuth,cityAuth
+        from audits
+    </select>
+
+    <select id="findAuditByJobInfoId" resultType="com.project.model.Audit" parameterType="int">
+        select id,jobInfoId,time,userName,userId,townAuth,countyAuth,cityAuth
+        from audits
+        where jobInfoId = #{jobInfoId}
+    </select>
+
+    <!-- 新增工作信息 -->
+    <insert id="createAudit" parameterType="com.project.model.Audit" >
+        insert into audits
+        (jobInfoId,time,userName,userId,townAuth,countyAuth,cityAuth)
+        values
+        (#{jobInfoId}, #{time},#{userName},#{userId},#{townAuth},#{countyAuth},#{cityAuth})
+    </insert>
+
+    <!--删除工作信息-->
+    <delete id="deleteAudit" parameterType="int">
+        DELETE FROM audits WHERE id = #{audit}
+    </delete>
+
+    <select id="getAudit" resultType="com.project.model.Audit" parameterType="int">
+        select id,jobInfoId,time,userName,userId,townAuth,countyAuth,cityAuth
+        from audits
+        WHERE id = #{audit}
+    </select>
+
+    <!-- 更新job信息-->
+    <update id="UpdateAudit" parameterType="com.project.model.Audit" >
+        update audits
+        <set >
+            <if test="townAuth != null and townAuth != ''" >
+                townAuth = #{townAuth},
+            </if>
+            <if test="countyAuth != null  and countyAuth != ''" >
+                countyAuth = #{countyAuth},
+            </if>
+            <if test="cityAuth != null and cityAuth != ''" >
+                cityAuth = #{cityAuth},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+</mapper>

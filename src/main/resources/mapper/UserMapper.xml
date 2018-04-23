@@ -28,7 +28,7 @@
         where id = #{userId}
     </update>
 
-    <select id="getUser" resultType="com.project.model.User" parameterType="map">
+    <select id="getUser" resultType="com.project.model.User" parameterType="int">
         select id,name,gender,email,password,phone,status,role,remark,idCard,insertDate
         from users
         WHERE id = #{id}
@@ -77,7 +77,7 @@
     </select>
 
     <!--用户登录-->
-    <select id="findUserByNameAndPwd" resultType="com.project.model.User" parameterType="map" >
+    <select id="findUserByUserId" resultType="com.project.model.User" parameterType="string" >
         select id,name,gender,email,password,phone,status,role,remark,idCard,insertDate
         from users
         where phone = #{phone} and password = #{password} and status = 1
