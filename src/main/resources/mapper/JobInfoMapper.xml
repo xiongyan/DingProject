@@ -7,6 +7,12 @@
         from jobinfo
     </select>
 
+    <select id="queryJobInfo" resultType="com.project.model.JobInfo" parameterType="string">
+        select id,title,author,content,time
+        from jobinfo
+        WHERE title like '%'+#{subject}+'%'
+    </select>
+
     <!-- 新增工作信息 -->
     <insert id="createJobInfo" parameterType="com.project.model.JobInfo" >
         insert into jobinfo

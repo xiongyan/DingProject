@@ -96,4 +96,32 @@ public class LearnServiceImpl implements LearnService {
         respEntity.setMsg(msg);
         return  respEntity;
     }
+
+    /**
+     * 查看用户正在学习的
+     * @param userId
+     * @return
+     */
+    public Object unfinishedLearn(int userId){
+        int code = 500;
+        String msg = "查询失败";
+        respEntity.setData(null);
+        respEntity.setCode(code);
+        respEntity.setMsg(msg);
+        return respEntity;
+    }
+
+    /**
+     * 查看用户已经正在学习的
+     * @param userId
+     * @return
+     */
+    public Object finishedLearn(int userId){
+        int code = 500;
+        String msg = "查询失败";
+        respEntity.setData(null);
+        respEntity.setCode(code);
+        respEntity.setMsg(msg);
+        return respEntity;
+    }
 }

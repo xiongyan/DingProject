@@ -41,6 +41,11 @@ public interface JobInfoService {
      */
     Object UpdateJobInfo(HttpServletRequest req, int jobId);
 
+    /**
+     * 模糊查询工作信息
+     * @return
+     */
+    Object queryJobInfo(String subject);
 
 }
 

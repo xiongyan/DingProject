@@ -174,4 +174,26 @@ public class JobInfoServiceImpl implements JobInfoService {
         respEntity.setMsg(msg);
         return  respEntity;
     }
+
+    /**
+     * 模糊查询工作信息
+     * @return
+     */
+    public Object queryJobInfo(String subject){
+        List<JobInfo> list = jobInfoDao.queryJobInfo(subject);
+        int code;
+        String msg;
+        if(list != null){
+            code = 200;
+            msg = "查询成功";
+            respEntity.setData(list);
+        }else{
+            code = 200;
+            msg = "数据为空";
+            respEntity.setData(null);
+        }
+        respEntity.setCode(code);
+        respEntity.setMsg(msg);
+        return respEntity;
+    }
 }

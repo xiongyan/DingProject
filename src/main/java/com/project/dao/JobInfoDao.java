@@ -40,4 +40,10 @@ public interface JobInfoDao {
      * @return
      */
     int UpdateJobInfo(JobInfo jobInfo);
+
+    /**
+     * 模糊查询工作信息
+     * @return
+     */
+    List<JobInfo> queryJobInfo(String subject);
 }
