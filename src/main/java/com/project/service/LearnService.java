@@ -20,6 +20,20 @@ public interface LearnService {
      */
     Object UpdateULearnProgress(HttpServletRequest req);
 
+    /**
+     * 查看用户正在学习的
+     * @param userId
+     * @return
+     */
+    Object unfinishedLearn(int userId);
+
+    /**
+     * 查看用户已经正在学习的
+     * @param userId
+     * @return
+     */
+    Object finishedLearn(int userId);
+
 
 }
 

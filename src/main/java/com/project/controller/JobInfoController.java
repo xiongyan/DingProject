@@ -67,4 +67,14 @@ public class JobInfoController {
     public Object UpdateJobInfo(HttpServletRequest req,@PathVariable int jobId){
         return jobInfoService.UpdateJobInfo(req, jobId);
     }
+
+    /**
+     * 模糊查询工作信息
+     * @return
+     */
+    @RequestMapping(value="/query",method= RequestMethod.GET)
+    public Object queryJobInfo(HttpServletRequest req) {
+        String subject = req.getParameter("subject");
+        return jobInfoService.queryJobInfo(subject);
+    }
 }

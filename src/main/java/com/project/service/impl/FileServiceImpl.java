@@ -1,21 +1,21 @@
 package com.project.service.impl;
 
 import com.project.model.RespEntity;
-import com.project.service.ImageService;
+import com.project.service.FileService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
+import java.io.*;
 import java.util.*;
 
 /**
  * Created by laishun on 2018/3/12.
  */
 @Service("imageService")
-public class ImageServiceImpl implements ImageService {
+public class FileServiceImpl implements FileService {
 
     private final static String DIRECTORY = "/mnt/pic/";
     private final static String URL = "http://47.100.46.80/img/";
@@ -29,7 +29,7 @@ public class ImageServiceImpl implements ImageService {
      * @return
      */
     @Override
-    public Object imageUpload(HttpServletRequest request){
+    public Object fileUpload(HttpServletRequest request){
         int code = 200;
         String msg = "上传成功";
         List<String> list = new ArrayList<>();
@@ -46,6 +46,7 @@ public class ImageServiceImpl implements ImageService {
                 if(file_path.exists()){
                    file_path.delete();
                 }
+                //上传文件
                 multipart.transferTo(file_path);
                 list.add(URL+newFileName);
             }
@@ -64,5 +65,26 @@ public class ImageServiceImpl implements ImageService {
         respEntity.setCode(code);
         respEntity.setMsg(msg);
         return respEntity;
+    }
+
+    /**
+     * 处理大文件
+     * @param path
+     * @param file
+     */
+    public void uploadSingleFile(File path,MultipartFile file) {
+        try {
+            BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(path));
+            int length = 0;
+            byte[] buffer = new byte[1024];
+            InputStream inputStream = file.getInputStream();
+            while ((length = inputStream.read(buffer)) != -1){
+                stream.write(buffer, 0, length);
+            }
+            stream.flush();
+            stream.close();
+        }catch (IOException e){
+            e.printStackTrace();
+        }
     }
 }

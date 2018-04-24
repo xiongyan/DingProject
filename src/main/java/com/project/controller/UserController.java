@@ -19,9 +19,6 @@ public class UserController {
     @Resource
     private UserService userService;
 
-    @Resource
-    private RequestUtil requestUtil;
-
     /**
      * 用户信息查询
      * @return
