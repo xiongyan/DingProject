@@ -83,6 +83,20 @@ public class JsonUtil {
     }
 
     /**
+     * 获取JSONObject值如果不存在返回默认值
+     * @param key
+     * @param defaultVal
+     * @return
+     */
+    public JSONObject getJSONObject(String key,JSONObject defaultVal){
+        if(json.has(key)){
+            return json.getJSONObject(key);
+        }else {
+            return defaultVal;
+        }
+    }
+
+    /**
      * 获取boolean值如果不存在返回默认值
      * @param key
      * @param defaultVal

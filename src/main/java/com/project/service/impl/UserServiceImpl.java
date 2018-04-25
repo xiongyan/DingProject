@@ -169,8 +169,8 @@ public class UserServiceImpl implements UserService {
         String role = res.getStringOrElse("role");
         String remark = res.getStringOrElse("remark");
         String idCard = res.getStringOrElse("idCard");
-        int code = 500;
-        String msg = "用户ID不能空";
+        int code;
+        String msg;
         User user_new = new User();
         user_new.setId(user_id);
         user_new.setName(name);
