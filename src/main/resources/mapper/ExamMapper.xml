@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.project.dao.ExamDao" >
+
+    <select id="getChoiceExams" resultMap="hashmap" >
+        select id,title,type,options,answer
+        from exams_choice
+    </select>
+
+    <select id="getJudgeExams" resultMap="hashmap" >
+        select id,title,type,options,answer
+        from exams_judge
+    </select>
+
+    <insert id="createExam" parameterType="hashmap" >
+        insert into #{table}
+        (title,type,options,answer)
+        values
+        (#{title}, #{type},#{options},#{answer})
+    </insert>
+
+    <delete id="deleteExam" parameterType="int">
+        DELETE FROM #{table} WHERE id = #{examId}
+    </delete>
+
+    <select id="getExam" resultMap="hashmap" parameterType="int">
+        select id,title,type,options,answer
+        from #{table}
+        WHERE id = #{examId}
+    </select>
+
+    <update id="UpdateExam" parameterType="com.project.model.User" >
+        update #{table}
+        <set >
+            <if test="title != null and title != ''" >
+                title = #{title},
+            </if>
+            <if test="type != null  and type != ''" >
+                type = #{type},
+            </if>
+            <if test="options != null and options != ''" >
+                options = #{options},
+            </if>
+            <if test="answer != null  and answer != ''" >
+                answer = #{answer},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <select id="createExamPaper" resultMap="hashmap" parameterType="hashmap">
+        SELECT id,title,type,options,answer
+        FROM #{table}
+        ORDER BY RAND()
+        LIMIT #{num}
+    </select>
+
+    <insert id="savePaper" parameterType="hashmap">
+        insert into papers
+        (time,userId,userName,paper,answer,judge_score,choice_score)
+        values
+        (#{time}, #{userId},#{userName},#{paper},#{answer},#{judge_score},#{choice_score})
+    </insert>
+
+    <select id="getExamPaper" resultMap="hashmap" parameterType="int">
+        select id,time,userId,userName,paper,answer,judge_score,choice_score
+        from papers
+        WHERE id = #{examId}
+    </select>
+
+    <select id="getExamRecord" resultMap="hashmap" parameterType="hashmap">
+        SELECT id,userId,paperId,time,answer,score
+        FROM exam_record
+        WHERE userId = #{userId} and paperId = #{paperId}
+    </select>
+
+    <insert id="submitExamPaper" parameterType="hashmap">
+        insert into papers
+        (userId,paperId,time,answer,score)
+        values
+        (#{userId}, #{paperId},#{time},#{answer},#{score})
+    </insert>
+
+</mapper>
