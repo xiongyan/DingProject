@@ -84,6 +84,16 @@
 			<artifactId>httpclient</artifactId>
 			<version>4.5.1</version>
 		</dependency>
+		<dependency>
+			<groupId>com.dingding</groupId>
+			<artifactId>taobao-sdk-java-auto_1479188381469</artifactId>
+			<version>20180404</version>
+		</dependency>
+		<dependency>
+			<groupId>com.dingding</groupId>
+			<artifactId>commons-logging</artifactId>
+			<version>1.1.1</version>
+		</dependency>
 		<!--<dependency>
 			<groupId>com.pentahohub.nexus</groupId>
 			<artifactId>alipay-sdk-java</artifactId>

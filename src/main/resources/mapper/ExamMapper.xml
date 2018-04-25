@@ -2,12 +2,12 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.project.dao.ExamDao" >
 
-    <select id="getChoiceExams" resultMap="hashmap" >
+    <select id="getChoiceExams" resultType="hashmap" >
         select id,title,type,options,answer
         from exams_choice
     </select>
 
-    <select id="getJudgeExams" resultMap="hashmap" >
+    <select id="getJudgeExams" resultType="hashmap" >
         select id,title,type,options,answer
         from exams_judge
     </select>
@@ -23,7 +23,7 @@
         DELETE FROM #{table} WHERE id = #{examId}
     </delete>
 
-    <select id="getExam" resultMap="hashmap" parameterType="int">
+    <select id="getExam" resultType="hashmap" parameterType="int">
         select id,title,type,options,answer
         from #{table}
         WHERE id = #{examId}
@@ -48,7 +48,7 @@
         where id = #{id}
     </update>
 
-    <select id="createExamPaper" resultMap="hashmap" parameterType="hashmap">
+    <select id="createExamPaper" resultType="hashmap" parameterType="hashmap">
         SELECT id,title,type,options,answer
         FROM #{table}
         ORDER BY RAND()
@@ -62,13 +62,13 @@
         (#{time}, #{userId},#{userName},#{paper},#{answer},#{judge_score},#{choice_score})
     </insert>
 
-    <select id="getExamPaper" resultMap="hashmap" parameterType="int">
+    <select id="getExamPaper" resultType="hashmap" parameterType="int">
         select id,time,userId,userName,paper,answer,judge_score,choice_score
         from papers
         WHERE id = #{examId}
     </select>
 
-    <select id="getExamRecord" resultMap="hashmap" parameterType="hashmap">
+    <select id="getExamRecord" resultType="hashmap" parameterType="hashmap">
         SELECT id,userId,paperId,time,answer,score
         FROM exam_record
         WHERE userId = #{userId} and paperId = #{paperId}

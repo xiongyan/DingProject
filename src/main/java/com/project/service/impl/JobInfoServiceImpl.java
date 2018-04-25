@@ -66,14 +66,18 @@ public class JobInfoServiceImpl implements JobInfoService {
         JSONObject jsonObject = requestUtil.getBody(req);
         JsonUtil res = new JsonUtil(jsonObject);
         String title = res.getStringOrElse("title");
-        String author = res.getStringOrElse("author");
         String content = res.getStringOrElse("content");
+        String token = req.getHeader("token");
+        JsonUtil jsonUtil = new JsonUtil((JSONObject)CacheUtil.getInstance().get(token));
+        String author = jsonUtil.getStringOrElse("name");
+        String userId = jsonUtil.getStringOrElse("userid");
         int code = 500;
-        String msg = "邮箱不能空";
+        String msg = "内部异常";
         JobInfo jobInfo = new JobInfo();
         jobInfo.setAuthor(author);
         jobInfo.setTitle(title);
         jobInfo.setContent(content);
+        jobInfo.setUserId(userId);
         jobInfo.setTime(DateUtil.getTodayTime());
         //保存新用户
         int flag = jobInfoDao.createJobInfo(jobInfo);
@@ -151,14 +155,12 @@ public class JobInfoServiceImpl implements JobInfoService {
         JSONObject jsonObject = requestUtil.getBody(req);
         JsonUtil res = new JsonUtil(jsonObject);
         String title = res.getStringOrElse("title");
-        String author = res.getStringOrElse("author");
         String content = res.getStringOrElse("content");
         int code;
         String msg;
         JobInfo jobInfo = new JobInfo();
         jobInfo.setId(jobId);
         jobInfo.setTitle(title);
-        jobInfo.setAuthor(author);
         jobInfo.setContent(content);
         int flag = jobInfoDao.UpdateJobInfo(jobInfo);
         if(flag == 1){
@@ -180,7 +182,7 @@ public class JobInfoServiceImpl implements JobInfoService {
      * @return
      */
     public Object queryJobInfo(String subject){
-        List<JobInfo> list = jobInfoDao.queryJobInfo(subject);
+        List<JobInfo> list = jobInfoDao.queryJobInfo("%"+subject+"%");
         int code;
         String msg;
         if(list != null){
