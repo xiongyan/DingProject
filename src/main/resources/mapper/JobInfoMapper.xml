@@ -3,22 +3,22 @@
 <mapper namespace="com.project.dao.JobInfoDao" >
 
     <select id="getJobInfos" resultType="com.project.model.JobInfo" >
-        select id,title,author,content,time
+        select id,title,author,userId,content,time
         from jobinfo
     </select>
 
     <select id="queryJobInfo" resultType="com.project.model.JobInfo" parameterType="string">
-        select id,title,author,content,time
+        select id,title,author,userId,content,time
         from jobinfo
-        WHERE title like '%'+#{subject}+'%'
+        WHERE title like #{subject}
     </select>
 
     <!-- 新增工作信息 -->
     <insert id="createJobInfo" parameterType="com.project.model.JobInfo" >
         insert into jobinfo
-        (title,author,content,time)
+        (title,author,userId,content,time)
         values
-        (#{title}, #{author},#{content},#{time})
+        (#{title}, #{author},#{userId},#{content},#{time})
     </insert>
 
     <!--删除工作信息-->
@@ -27,20 +27,23 @@
     </delete>
 
     <select id="getJobInfo" resultType="com.project.model.JobInfo" parameterType="int">
-        select id,title,author,content,time
-        from users
+        select id,title,author,userId,content,time
+        from jobinfo
         WHERE id = #{jobId}
     </select>
 
     <!-- 更新job信息-->
     <update id="UpdateJobInfo" parameterType="com.project.model.JobInfo" >
-        update users
+        update jobinfo
         <set >
             <if test="title != null and title != ''" >
                 title = #{title},
             </if>
             <if test="author != null  and author != ''" >
                 author = #{author},
+            </if>
+            <if test="userId != null  and userId != ''" >
+                userId = #{userId},
             </if>
             <if test="content != null and content != ''" >
                 content = #{content},

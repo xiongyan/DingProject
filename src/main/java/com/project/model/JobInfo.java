@@ -7,8 +7,19 @@ public class JobInfo {
     private int id;
     private String title;
     private String author;
+    private String userId;
     private String time;
     private String content;
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getUserId() {
+
+        return userId;
+    }
+
     private double progress;
 
     public double getProgress() {
