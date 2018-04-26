@@ -127,9 +127,9 @@ public class LoginController {
     public Object logout(HttpServletRequest req) {
         // 移除session
         String token_access = req.getHeader("token");
-        User user = (User)CacheUtil.getInstance().get(token_access);
+        JSONObject obj = (JSONObject)CacheUtil.getInstance().get(token_access);
         CacheUtil.getInstance().remove(token_access);
-        CacheUtil.getInstance().remove(user.getPhone());
+        CacheUtil.getInstance().remove(obj.getString("userid"));
         respEntity.setCode(200);
         respEntity.setMsg("成功退出");
         respEntity.setData(null);
