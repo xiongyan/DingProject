@@ -70,7 +70,7 @@ public class LoginController {
             e.printStackTrace();
         }
         Map<String,Object> result = new HashMap<>();
-        result.put("jsticket",ticket);
+        //result.put("jsticket",ticket);
         result.put("signature",signature);
         result.put("nonceStr",nonceStr);
         result.put("timeStamp",timeStamp);
@@ -82,6 +82,8 @@ public class LoginController {
     @RequestMapping(value="/login",method= RequestMethod.POST)
     @ResponseBody
     public Object login(HttpServletRequest req) {
+        int code = 500;
+        String msg = "没找到该用户";
         //获取用户的登陆信息，并且进行认证
         JSONObject res = requestUtil.getBody(req);
         String userId = res.getString("userId");
@@ -100,26 +102,27 @@ public class LoginController {
                         result.put(String.valueOf(e.getKey()), wrap(value));
                     }
                 }
+
+                //判断是否缓存中有啦
+                Object token_old = CacheUtil.getInstance().get(userId);
+                if(token_old != null && !"".contentEquals(token_old.toString())){
+                    CacheUtil.getInstance().remove(userId);
+                    CacheUtil.getInstance().remove(token_old.toString());
+                }
+                Long loginTime = System.currentTimeMillis();
+                String token_access = md5Util.MD5("userId:"+userId+";loginTime:"+loginTime);
+                result.put("token", token_access);
+                CacheUtil.getInstance().put(userId,token_access);
+                CacheUtil.getInstance().put(token_access, obj);
+                respEntity.setData(result);
+                code = 200;
+                msg = "登陆成功";
             }
-            //判断是否缓存中有啦
-            Object token_old = CacheUtil.getInstance().get(userId);
-            if(token_old != null && !"".contentEquals(token_old.toString())){
-                CacheUtil.getInstance().remove(userId);
-                CacheUtil.getInstance().remove(token_old.toString());
-            }
-            Long loginTime = System.currentTimeMillis();
-            String token_access = md5Util.MD5("userId:"+userId+";loginTime:"+loginTime);
-            result.put("token", token_access);
-            CacheUtil.getInstance().put(userId,token_access);
-            CacheUtil.getInstance().put(token_access, obj);
-            respEntity.setData(result);
-            respEntity.setCode(200);
-            respEntity.setMsg("用户登陆成功");
         }else{
-            respEntity.setCode(500);
-            respEntity.setMsg("用户名或密码错误");
             respEntity.setData(null);
         }
+        respEntity.setCode(code);
+        respEntity.setMsg(msg);
         return  respEntity;
     }
 

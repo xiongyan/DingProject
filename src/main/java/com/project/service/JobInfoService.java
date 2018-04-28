@@ -7,17 +7,17 @@ import javax.servlet.http.HttpServletRequest;
  */
 public interface JobInfoService {
     /**
-     * 获取所有工作信息列表
+     * 获取所有党建新闻信息列表
      * @return
      */
-    Object getJobInfos();
+    Object getNews(String flag);
 
     /**
      * create 所有工作信息
      * @param req
      * @return
      */
-    Object createJobInfo(HttpServletRequest req);
+    Object createJobInfo(HttpServletRequest req,String type);
 
     /**
      * delete 所有工作信息
@@ -42,10 +42,30 @@ public interface JobInfoService {
     Object UpdateJobInfo(HttpServletRequest req, int jobId);
 
     /**
+     * 根据新闻ID查询该用户创建的党建新闻
+     * @param type
+     * @return
+     */
+    Object getJobInfoByUserId(HttpServletRequest req, String type);
+
+    /**
      * 模糊查询工作信息
      * @return
      */
-    Object queryJobInfo(String subject);
+    Object queryJobInfo(String subject,String type);
+
+    /**
+     * 查询所有学习内容
+     * @return
+     */
+    Object getLearnContents();
+
+    /**
+     * 置顶党建新闻
+     * @param jobId
+     * @return
+     */
+    Object stickNew(int jobId);
 
 }
 

@@ -4,6 +4,7 @@ import com.project.dao.ExamDao;
 import com.project.model.RespEntity;
 import com.project.service.ExamService;
 import com.project.util.CacheUtil;
+import com.project.util.DingUtil;
 import com.project.util.JsonUtil;
 import com.project.util.RequestUtil;
 import org.json.JSONArray;
@@ -36,12 +37,16 @@ public class ExamServiceImpl implements ExamService {
      * @return
      */
     @Override
-    public Object getExams(String type) {
+    public Object getExams(HttpServletRequest req,String type) {
         List<Map<String,Object>> list = null;
+        //获取用户信息
+        String token = req.getHeader("token");
+        JsonUtil jsonUtil = new JsonUtil((JSONObject)CacheUtil.getInstance().get(token));
+        String userId = jsonUtil.getStringOrElse("userid");
         if(type.equalsIgnoreCase("choice")){
-            list = examDao.getChoiceExams();
+            list = examDao.getChoiceExams(userId);
         }else if(type.equalsIgnoreCase("judge")){
-            list = examDao.getJudgeExams();
+            list = examDao.getJudgeExams(userId);
         }
         int code = 500;
         String msg = "内部发生异常";
@@ -64,32 +69,56 @@ public class ExamServiceImpl implements ExamService {
      */
     @Override
     public Object createExam(HttpServletRequest req){
-        JSONObject jsonObject = requestUtil.getBody(req);
-        JsonUtil res = new JsonUtil(jsonObject);
-        String title = res.getStringOrElse("title");
-        String type = res.getStringOrElse("type");
-        JSONObject options = res.getJSONObject("options", null);
-        String answer = res.getStringOrElse("answer");
         int code = 500;
         String msg = "添加试题异常";
-        Map<String,Object> exams = new HashMap<>();
-        exams.put("title",title);
-        exams.put("answer",answer);
-        if(type.equalsIgnoreCase("choice")){
-            exams.put("table","exams_choice");
-        }else if(type.equalsIgnoreCase("judge")){
-            exams.put("table","exams_judge");
-        }
-        if(options != null){
-            exams.put("options",options.toString());
-        }else{
-            exams.put("options","{}");
-        }
-        int flag = examDao.createExam(exams);
-        if(flag == 1){
-            code = 200;
-            msg = "成功添加试题";
-            respEntity.setData(exams);
+        try{
+            JSONObject jsonObject = requestUtil.getBody(req);
+            JsonUtil res = new JsonUtil(jsonObject);
+            String title = res.getStringOrElse("title");
+            String type = res.getStringOrElse("type");
+            JSONObject options = res.getJSONObject("options", null);
+            String answer = res.getStringOrElse("answer");
+            Map<String,Object> exams = new HashMap<>();
+            exams.put("title",title);
+            exams.put("answer",answer);
+            if(type.equalsIgnoreCase("choice")){
+                exams.put("table","exams_choice");
+            }else if(type.equalsIgnoreCase("judge")){
+                exams.put("table","exams_judge");
+            }
+            if(options != null){
+                exams.put("options",options.toString());
+            }else{
+                exams.put("options","{}");
+            }
+            //获取用户信息
+            String token = req.getHeader("token");
+            JsonUtil jsonUtil = new JsonUtil((JSONObject)CacheUtil.getInstance().get(token));
+            exams.put("createUser", jsonUtil.getStringOrElse("userid"));
+            JSONArray array = jsonUtil.getJSONArray("department",null);
+            if(array != null && array.length() > 0){
+                int department = array.getInt(0);
+                JsonUtil depart = new JsonUtil(DingUtil.getInstance().getApartment(department));
+                int parentId = depart.getIntOrElse("parentid",-1);
+                if(parentId == -1){
+                    exams.put("audit", "true");
+                }else {
+                    exams.put("audit", "false");
+                }
+            }else{
+                exams.put("audit","true");
+            }
+            int flag = examDao.createExam(exams);
+            if(flag == 1){
+                code = 200;
+                msg = "成功添加试题";
+                respEntity.setData(exams);
+            }else {
+                respEntity.setData(null);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            respEntity.setData(null);
         }
         respEntity.setCode(code);
         respEntity.setMsg(msg);

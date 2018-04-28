@@ -7,19 +7,19 @@ public class Audit {
     private int     id;
     private int     jobInfoId;
     private String  time;
-    private String  userName;
-    private String  userId;
-    private boolean townAuth;
-    private boolean countyAuth;
-    private boolean cityAuth;
+    private String  auditUser;
+    private String  createUser;
+    private String  current;
+    private boolean isFinish;
+    private String  type;
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setType(String type) {
+        this.type = type;
     }
 
-    public String getUserId() {
-        return userId;
+    public String getType() {
 
+        return type;
     }
 
     public void setId(int id) {
@@ -34,20 +34,20 @@ public class Audit {
         this.time = time;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setAuditUser(String auditUser) {
+        this.auditUser = auditUser;
     }
 
-    public void setTownAuth(boolean townAuth) {
-        this.townAuth = townAuth;
+    public void setCreateUser(String createUser) {
+        this.createUser = createUser;
     }
 
-    public void setCountyAuth(boolean countyAuth) {
-        this.countyAuth = countyAuth;
+    public void setCurrent(String current) {
+        this.current = current;
     }
 
-    public void setCityAuth(boolean cityAuth) {
-        this.cityAuth = cityAuth;
+    public void setIsFinish(boolean isFinish) {
+        this.isFinish = isFinish;
     }
 
     public int getId() {
@@ -63,19 +63,19 @@ public class Audit {
         return time;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getAuditUser() {
+        return auditUser;
     }
 
-    public boolean isTownAuth() {
-        return townAuth;
+    public String getCreateUser() {
+        return createUser;
     }
 
-    public boolean isCountyAuth() {
-        return countyAuth;
+    public String getCurrent() {
+        return current;
     }
 
-    public boolean isCityAuth() {
-        return cityAuth;
+    public boolean isFinish() {
+        return isFinish;
     }
 }

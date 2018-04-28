@@ -19,62 +19,153 @@ public class JobInfoController {
     private JobInfoService jobInfoService;
 
     /**
-     * 查询所有工作信息
+     * 查询所有优秀党建新闻
      * @return
      */
-    @RequestMapping(value="/jobInfo",method= RequestMethod.GET)
-    public Object getJobInfos() {
-        return jobInfoService.getJobInfos();
+    @RequestMapping(value="/fine_news",method= RequestMethod.GET)
+    public Object getFineNews() {
+        return jobInfoService.getNews("fine");
     }
 
     /**
-     * 创建工作信息
+     * 查询所有党建新闻
+     * @return
+     */
+    @RequestMapping(value="/news",method= RequestMethod.GET)
+    public Object getNews() {
+        return jobInfoService.getNews("normal");
+    }
+
+    /**
+     * 创建党建新闻
      * @param req
      * @return
      */
-    @RequestMapping(value="/jobInfo",method= RequestMethod.POST)
-    public Object createJobInfo(HttpServletRequest req){
-        return jobInfoService.createJobInfo(req);
+    @RequestMapping(value="/news",method= RequestMethod.POST)
+    public Object createNew(HttpServletRequest req){
+        return jobInfoService.createJobInfo(req,"new");
     }
 
     /**
-     * 删除工作信息
+     * 删除党建新闻
      * @param jobId
      * @return
      */
-    @RequestMapping(value="/jobInfo/{jobId}",method= RequestMethod.DELETE)
-    public Object deleteJobInfo(@PathVariable int jobId){
+    @RequestMapping(value="/news/{jobId}",method= RequestMethod.DELETE)
+    public Object deleteNew(@PathVariable int jobId){
         return jobInfoService.deleteJobInfo(jobId);
     }
 
     /**
-     * 查询工作信息
+     * 查询党建新闻
      * @param jobId
      * @return
      */
-    @RequestMapping(value="/jobInfo/{jobId}",method= RequestMethod.GET)
-    public Object getJobInfo(HttpServletRequest req, @PathVariable int jobId){
+    @RequestMapping(value="/news/{jobId}",method= RequestMethod.GET)
+    public Object getNew(HttpServletRequest req, @PathVariable int jobId){
         return jobInfoService.getJobInfo(req,jobId);
     }
 
     /**
-     * 修改工作信息
+     * 修改党建新闻
      * @param req
      * @param jobId
      * @return
      */
-    @RequestMapping(value="/jobInfo/{jobId}",method= RequestMethod.POST)
-    public Object UpdateJobInfo(HttpServletRequest req,@PathVariable int jobId){
+    @RequestMapping(value="/news/{jobId}",method= RequestMethod.POST)
+    public Object UpdateNews(HttpServletRequest req,@PathVariable int jobId){
         return jobInfoService.UpdateJobInfo(req, jobId);
+    }
+
+    /**
+     * 根据新闻ID查询该用户创建的党建新闻
+     * @param req
+     * @return
+     */
+    @RequestMapping(value="/news/user",method= RequestMethod.GET)
+    public Object getNewByUserId(HttpServletRequest req){
+        return jobInfoService.getJobInfoByUserId(req, "new");
+    }
+
+    /**
+     * 置顶党建新闻
+     * @param jobId
+     * @return
+     */
+    @RequestMapping(value="/news/stick/{jobId}",method= RequestMethod.GET)
+    public Object stickNew(@PathVariable int jobId){
+        return jobInfoService.stickNew(jobId);
+    }
+
+
+    //===========================学习内容======================
+    /**
+     * 查询所有学习内容
+     * @return
+     */
+    @RequestMapping(value="/learnContent",method= RequestMethod.GET)
+    public Object getLearnContents() {
+        return jobInfoService.getLearnContents();
+    }
+
+    /**
+     * 创建学习内容
+     * @param req
+     * @return
+     */
+    @RequestMapping(value="/learnContent",method= RequestMethod.POST)
+    public Object createLearnContent(HttpServletRequest req){
+        return jobInfoService.createJobInfo(req,"learn");
+    }
+
+    /**
+     * 删除学习内容
+     * @param jobId
+     * @return
+     */
+    @RequestMapping(value="/learnContent/{jobId}",method= RequestMethod.DELETE)
+    public Object deleteLearnContent(@PathVariable int jobId){
+        return jobInfoService.deleteJobInfo(jobId);
+    }
+
+    /**
+     * 查询学习内容
+     * @param jobId
+     * @return
+     */
+    @RequestMapping(value="/learnContent/{jobId}",method= RequestMethod.GET)
+    public Object getLearnContent(HttpServletRequest req, @PathVariable int jobId){
+        return jobInfoService.getJobInfo(req,jobId);
+    }
+
+    /**
+     * 修改学习内容
+     * @param req
+     * @param jobId
+     * @return
+     */
+    @RequestMapping(value="/learnContent/{jobId}",method= RequestMethod.POST)
+    public Object UpdateLearnContent(HttpServletRequest req,@PathVariable int jobId){
+        return jobInfoService.UpdateJobInfo(req, jobId);
+    }
+
+    /**
+     * 根据新闻ID查询该用户创建的学习内容
+     * @param req
+     * @return
+     */
+    @RequestMapping(value="/learnContent/user",method= RequestMethod.GET)
+    public Object getLearnContentByUserId(HttpServletRequest req){
+        return jobInfoService.getJobInfoByUserId(req, "learn");
     }
 
     /**
      * 模糊查询工作信息
      * @return
      */
-    @RequestMapping(value="/query",method= RequestMethod.GET)
-    public Object queryJobInfo(HttpServletRequest req) {
+    @RequestMapping(value="/query/{type}",method= RequestMethod.GET)
+    public Object queryJobInfo(HttpServletRequest req,@PathVariable String type) {
         String subject = req.getParameter("subject");
-        return jobInfoService.queryJobInfo(subject);
+        return jobInfoService.queryJobInfo(subject,type);
     }
 }
