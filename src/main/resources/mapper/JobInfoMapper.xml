@@ -2,23 +2,36 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.project.dao.JobInfoDao" >
 
-    <select id="getJobInfos" resultType="com.project.model.JobInfo" >
+    <select id="getNews" resultType="com.project.model.JobInfo" parameterType="string">
         select id,title,author,userId,content,time
         from jobinfo
+        WHERE jobType = 'new' and audit = 'true' and quality = #{quality}
+    </select>
+
+    <select id="getLearnContents" resultType="com.project.model.JobInfo" >
+        select id,title,author,userId,content,time
+        from jobinfo
+        WHERE jobType = 'learn' and audit = 'true'
+    </select>
+
+    <select id="getJobInfoByUserId" resultType="com.project.model.JobInfo" parameterType="com.project.model.JobInfo">
+        select id,title,author,userId,content,time,audit,quality
+        from jobinfo
+        WHERE jobType = #{jobType} and userId = #{userId}
     </select>
 
     <select id="queryJobInfo" resultType="com.project.model.JobInfo" parameterType="string">
         select id,title,author,userId,content,time
         from jobinfo
-        WHERE title like #{subject}
+        WHERE jobType = #{type} and title like #{subject}
     </select>
 
     <!-- 新增工作信息 -->
     <insert id="createJobInfo" parameterType="com.project.model.JobInfo" >
         insert into jobinfo
-        (title,author,userId,content,time)
+        (title,author,userId,content,time,jobType,audit,quality)
         values
-        (#{title}, #{author},#{userId},#{content},#{time})
+        (#{title}, #{author},#{userId},#{content},#{time},#{jobType},#{audit},#{quality})
     </insert>
 
     <!--删除工作信息-->
@@ -47,6 +60,9 @@
             </if>
             <if test="content != null and content != ''" >
                 content = #{content},
+            </if>
+            <if test="quality != null and quality != ''" >
+                quality = #{quality},
             </if>
             <if test="time != null and time != ''" >
                 time = #{time},

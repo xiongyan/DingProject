@@ -10,7 +10,7 @@
     </insert>
 
     <update id="updateLearnProgress" parameterType="map" >
-        update users
+        update progress
         <set >
             progress = #{progress}
         </set>
@@ -19,7 +19,7 @@
 
     <select id="getLearnProgress" resultType="hashmap" parameterType="map">
         select id,userId,jobInfo,progress
-        from users
+        from progress
         WHERE userId = #{userId} and jobInfo = #{userId}
     </select>
 

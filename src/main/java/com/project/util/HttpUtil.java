@@ -23,7 +23,7 @@ public class HttpUtil {
      */
     public String post(String url,String body){
         HttpResponse rep = null;
-        String result = null;
+        String result = "";
         try {
             HttpClient httpClients = HttpClients.createDefault();
             HttpPost httpPost = new HttpPost(url);
@@ -61,7 +61,7 @@ public class HttpUtil {
      */
     public String get(String url){
         HttpResponse rep = null;
-        String result = null;
+        String result = "";
         try{
             HttpClient httpClients = HttpClients.createDefault();
             HttpGet httpGet = new HttpGet(url);

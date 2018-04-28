@@ -186,6 +186,24 @@ public class DingUtil {
     }
 
     /**
+     * 获取部门详情
+     * @return
+     */
+    public JSONObject getApartment(int id){
+        JSONObject result = new JSONObject();
+        try {
+            String token = getToken(CORPID,CORPSECRET);
+            HttpUtil httpUtil = new HttpUtil();
+            //先判断这个部门是否存在
+            String findUrl = "https://oapi.dingtalk.com/department/get?access_token="+token+"&id="+id;
+            result = new JSONObject(httpUtil.get(findUrl));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    /**
      * 获取第三方微应用列表
      * @return
      */

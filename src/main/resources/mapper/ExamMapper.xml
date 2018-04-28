@@ -3,20 +3,22 @@
 <mapper namespace="com.project.dao.ExamDao" >
 
     <select id="getChoiceExams" resultType="hashmap" >
-        select id,title,type,options,answer
+        select id,title,type,options,answer,audit
         from exams_choice
+        where createUser = #{userId}
     </select>
 
     <select id="getJudgeExams" resultType="hashmap" >
-        select id,title,type,options,answer
+        select id,title,type,options,answer,audit
         from exams_judge
+        where createUser = #{userId}
     </select>
 
     <insert id="createExam" parameterType="hashmap" >
         insert into #{table}
-        (title,type,options,answer)
+        (title,type,options,answer,audit)
         values
-        (#{title}, #{type},#{options},#{answer})
+        (#{title}, #{type},#{options},#{answer},#{audit})
     </insert>
 
     <delete id="deleteExam" parameterType="int">
@@ -24,25 +26,25 @@
     </delete>
 
     <select id="getExam" resultType="hashmap" parameterType="int">
-        select id,title,type,options,answer
+        select id,title,type,options,answer,audit
         from #{table}
         WHERE id = #{examId}
     </select>
 
-    <update id="UpdateExam" parameterType="com.project.model.User" >
+    <update id="UpdateExam" parameterType="hashmap" >
         update #{table}
         <set >
             <if test="title != null and title != ''" >
                 title = #{title},
-            </if>
-            <if test="type != null  and type != ''" >
-                type = #{type},
             </if>
             <if test="options != null and options != ''" >
                 options = #{options},
             </if>
             <if test="answer != null  and answer != ''" >
                 answer = #{answer},
+            </if>
+            <if test="audit != null  and audit != ''" >
+                audit = #{audit},
             </if>
         </set>
         where id = #{id}
@@ -51,6 +53,7 @@
     <select id="createExamPaper" resultType="hashmap" parameterType="hashmap">
         SELECT id,title,type,options,answer
         FROM #{table}
+        where audit = 'true'
         ORDER BY RAND()
         LIMIT #{num}
     </select>

@@ -10,7 +10,7 @@ public interface ExamService {
      * 获取考试试题
      * @return
      */
-    Object getExams(String type);
+    Object getExams(HttpServletRequest req,String type);
 
     /**
      * 创建新的试题

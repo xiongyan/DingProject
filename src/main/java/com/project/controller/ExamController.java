@@ -23,8 +23,8 @@ public class ExamController {
      * @return
      */
     @RequestMapping(value="/exams/{type}",method= RequestMethod.GET)
-    public Object getExams(@PathVariable String type) {
-        return examService.getExams(type);
+    public Object getExams(HttpServletRequest req,@PathVariable String type) {
+        return examService.getExams(req,type);
     }
 
     /**

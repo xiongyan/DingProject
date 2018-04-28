@@ -2,15 +2,47 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.project.dao.AuditDao" >
 
-    <select id="getAudits" resultType="com.project.model.Audit" >
-        select id,jobInfoId,time,userName,userId,townAuth,countyAuth,cityAuth
-        from audits
+    <select id="getNewsAuditsByCreate" resultType="com.project.model.JobInfo" parameterType="string">
+        select id,title,author,userId,content,time,audit,quality,jobType
+        from jobinfo
+        WHERE id in (select jobInfoId
+                     from audits
+                     where createUser = #{userId}
+                     )
     </select>
 
-    <select id="findAuditByJobInfoId" resultType="com.project.model.Audit" parameterType="int">
-        select id,jobInfoId,time,userName,userId,townAuth,countyAuth,cityAuth
+    <select id="getExamAuditsByCreate" resultType="hashmap" parameterType="string">
+        select id,title,type,options,answer
+        from exams_choice
+        WHERE id in (select jobInfoId
+                     from audits
+                     where createUser = #{userId}
+                     )
+    </select>
+
+    <select id="getNewsAuditsByCheck" resultType="com.project.model.JobInfo" parameterType="string">
+        select id,title,author,userId,content,time,audit,quality,jobType
+        from jobinfo
+        WHERE id in (select jobInfoId
         from audits
-        where jobInfoId = #{jobInfoId}
+        where auditUser = #{userId}
+        )
+    </select>
+
+    <select id="getExamAuditsByCheck" resultType="hashmap" parameterType="string">
+        select id,title,type,options,answer
+        from exams_choice
+        WHERE id in (select jobInfoId
+        from audits
+        where auditUser = #{userId}
+        )
+    </select>
+
+
+    <select id="findAuditByJobInfoId" resultType="com.project.model.Audit" parameterType="hashmap">
+        select id,jobInfoId,time,auditUser,createUser,current,isFinish,type
+        from audits
+        where jobInfoId = #{jobInfoId} and type = #{type}
     </select>
 
     <!-- 新增工作信息 -->
@@ -27,7 +59,7 @@
     </delete>
 
     <select id="getAudit" resultType="com.project.model.Audit" parameterType="int">
-        select id,jobInfoId,time,userName,userId,townAuth,countyAuth,cityAuth
+        select id,jobInfoId,time,auditUser,createUser,current,isFinish,type
         from audits
         WHERE id = #{audit}
     </select>
@@ -36,14 +68,14 @@
     <update id="UpdateAudit" parameterType="com.project.model.Audit" >
         update audits
         <set >
-            <if test="townAuth != null and townAuth != ''" >
-                townAuth = #{townAuth},
+            <if test="isFinish != null and isFinish != ''" >
+                isFinish = #{isFinish},
             </if>
-            <if test="countyAuth != null  and countyAuth != ''" >
-                countyAuth = #{countyAuth},
+            <if test="auditUser != null  and auditUser != ''" >
+                auditUser = #{auditUser},
             </if>
-            <if test="cityAuth != null and cityAuth != ''" >
-                cityAuth = #{cityAuth},
+            <if test="current != null and current != ''" >
+                current = #{current},
             </if>
         </set>
         where id = #{id}

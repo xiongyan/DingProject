@@ -7,10 +7,16 @@ import javax.servlet.http.HttpServletRequest;
  */
 public interface AuditService {
     /**
-     * 获取所有工作审核
+     * 查询用户创建的所有工作审核
      * @return
      */
-    Object getAudits();
+    Object getAuditsByCreate(String userId,String type);
+
+    /**
+     * 获取审批人员需要进行审批的工作
+     * @return
+     */
+    Object getAuditsByCheck(String userId,String type);
 
     /**
      * create 所有一条工作审核
@@ -35,11 +41,10 @@ public interface AuditService {
 
     /**
      * 修改一条工作审核进度
-     * @param jobId
      * @param req
      * @return
      */
-    Object UpdateAudit(HttpServletRequest req, int jobId);
+    Object UpdateAudit(HttpServletRequest req);
 
 
 }

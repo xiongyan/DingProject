@@ -11,13 +11,13 @@ public interface ExamDao {
      * 获取所有选择题试题
      * @return
      */
-    List<Map<String,Object>> getChoiceExams();
+    List<Map<String,Object>> getChoiceExams(String userId);
 
     /**
      * 获取所有判断题试题
      * @return
      */
-    List<Map<String,Object>> getJudgeExams();
+    List<Map<String,Object>> getJudgeExams(String userId);
 
     /**
      * 创建新的试题

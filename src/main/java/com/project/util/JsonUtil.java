@@ -10,7 +10,11 @@ public class JsonUtil {
     private JSONObject json;
 
     public JsonUtil(JSONObject json){
-        this.json = json;
+        if(json == null){
+            this.json = new JSONObject();
+        }else {
+            this.json = json;
+        }
     }
 
     /**

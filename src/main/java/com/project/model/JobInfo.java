@@ -8,8 +8,37 @@ public class JobInfo {
     private String title;
     private String author;
     private String userId;
+    private String jobType;
     private String time;
     private String content;
+    private String audit;
+    private String quality;
+
+    public void setAudit(String audit) {
+        this.audit = audit;
+    }
+
+    public void setQuality(String quality) {
+        this.quality = quality;
+    }
+
+    public String getAudit() {
+
+        return audit;
+    }
+
+    public String getQuality() {
+        return quality;
+    }
+
+    public void setJobType(String jobType) {
+        this.jobType = jobType;
+    }
+
+    public String getJobType() {
+        return jobType;
+
+    }
 
     public void setUserId(String userId) {
         this.userId = userId;
