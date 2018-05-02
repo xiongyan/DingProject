@@ -92,7 +92,7 @@ public class JobInfoController {
      * @param jobId
      * @return
      */
-    @RequestMapping(value="/news/stick/{jobId}",method= RequestMethod.GET)
+    @RequestMapping(value="/news/stick/{jobId}",method= RequestMethod.POST)
     public Object stickNew(@PathVariable int jobId){
         return jobInfoService.stickNew(jobId);
     }

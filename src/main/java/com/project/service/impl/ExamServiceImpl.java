@@ -76,6 +76,7 @@ public class ExamServiceImpl implements ExamService {
             JsonUtil res = new JsonUtil(jsonObject);
             String title = res.getStringOrElse("title");
             String type = res.getStringOrElse("type");
+            String questionType = res.getStringOrElse("questionType");
             JSONObject options = res.getJSONObject("options", null);
             String answer = res.getStringOrElse("answer");
             Map<String,Object> exams = new HashMap<>();
@@ -83,8 +84,10 @@ public class ExamServiceImpl implements ExamService {
             exams.put("answer",answer);
             if(type.equalsIgnoreCase("choice")){
                 exams.put("table","exams_choice");
+                exams.put("questionType",questionType);
             }else if(type.equalsIgnoreCase("judge")){
                 exams.put("table","exams_judge");
+                exams.put("questionType","judge");
             }
             if(options != null){
                 exams.put("options",options.toString());
@@ -192,6 +195,7 @@ public class ExamServiceImpl implements ExamService {
         JsonUtil res = new JsonUtil(jsonObject);
         String title = res.getStringOrElse("title");
         String type = res.getStringOrElse("type");
+        String questionType = res.getStringOrElse("questionType");
         JSONObject options = res.getJSONObject("options", null);
         String answer = res.getStringOrElse("answer");
         int code;
@@ -200,6 +204,9 @@ public class ExamServiceImpl implements ExamService {
         exams.put("id",examId);
         if(type.equalsIgnoreCase("choice")){
             exams.put("table", "exams_choice");
+            if(!"".equalsIgnoreCase(questionType)){
+                exams.put("questionType",questionType);
+            }
         }else if(type.equalsIgnoreCase("judge")){
             exams.put("table", "exams_judge");
         }
@@ -232,33 +239,41 @@ public class ExamServiceImpl implements ExamService {
     public Object createExamPaper(HttpServletRequest req) {
         JSONObject jsonObject = requestUtil.getBody(req);
         JsonUtil res = new JsonUtil(jsonObject);
-        int choice = res.getIntOrElse("choice",50);
+        int multiple_choice = res.getIntOrElse("multiple_choice",25);
+        int single_choice = res.getIntOrElse("single_choice",25);
         int judge = res.getIntOrElse("judge",50);
         int time = res.getIntOrElse("time",60);
         Double judge_score = res.getDoubbleOrElse("judge_score", 1.0);
-        Double choice_score = res.getDoubbleOrElse("choice_score", 1.0);
+        Double multiple_choice_score = res.getDoubbleOrElse("multiple_choice_score", 1.0);
+        Double single_choice_score = res.getDoubbleOrElse("single_choice_score", 1.0);
         int code;
         String msg;
         //随机获取选择题
         Map<String,Object> choicePara = new HashMap<>();
-        choicePara.put("num",choice);
-        choicePara.put("table","exams_choice");
-        List<Map<String,Object>> choiceList = examDao.createExamPaper(choicePara);
+        choicePara.put("multiple_choice",multiple_choice);
+        choicePara.put("single_choice",single_choice);
+        List<Map<String,Object>> choiceList = examDao.createExamPaperFromChoice(choicePara);
         //随机判断选择题
-        Map<String,Object> judgePara = new HashMap<>();
-        judgePara.put("num",judge);
-        judgePara.put("table","exams_judge");
         //获取试卷列表
-        List<Map<String,Object>> judgeList = examDao.createExamPaper(judgePara);
+        List<Map<String,Object>> judgeList = examDao.createExamPaperFromJudge(judge);
         if(judgeList != null && judgeList.size() > 0){
             choiceList.addAll(judgeList);
         }
-        if(choiceList != null && choiceList.size() == (choice+judge)){
+        if(choiceList != null && choiceList.size() == (multiple_choice+single_choice+judge)){
             code = 200;
             msg = "获取试卷成功";
             List<String> answer = new ArrayList<>();
+            List<Integer> typeList = new ArrayList<>();
             for(Map<String,Object> obj : choiceList){
                 answer.add(obj.get("answer").toString());
+                String questionType = obj.get("questionType").toString();
+                if("multiple".equalsIgnoreCase(questionType)){
+                    typeList.add(1);
+                }else if("single".equalsIgnoreCase(questionType)){
+                    typeList.add(0);
+                }else if("judge".equalsIgnoreCase(questionType)){
+                    typeList.add(2);
+                }
             }
             respEntity.setData(choiceList);
             //想数据保存一份试卷
@@ -267,8 +282,10 @@ public class ExamServiceImpl implements ExamService {
             paper.put("paper",choiceList.toString());
             paper.put("time",time);
             paper.put("judge_score",judge_score);
-            paper.put("choice_score",choice_score);
+            paper.put("multiple_choice_score",multiple_choice_score);
+            paper.put("single_choice_score",single_choice_score);
             paper.put("answer",answer.toString());
+            paper.put("typeList",typeList.toString());
             String token = req.getHeader("token");
             JsonUtil jsonUtil = new JsonUtil((JSONObject)CacheUtil.getInstance().get(token));
             paper.put("userId",jsonUtil.getStringOrElse("userid"));
@@ -333,36 +350,62 @@ public class ExamServiceImpl implements ExamService {
         int paperId = res.getIntOrElse("paperId", -1);
         String userId = res.getStringOrElse("userId");
         int time = res.getIntOrElse("time",-1);
+        boolean isFinish = res.getBooleanOrElse("isFinish",true);
         //计算得分
         Map<String,Object> paper = examDao.getExamPaper(paperId);
-        double choice_score = Double.parseDouble(paper.get("choice_score").toString());
+        double single_choice_score = Double.parseDouble(paper.get("single_choice_score").toString());
+        double multiple_choice_score = Double.parseDouble(paper.get("multiple_choice_score").toString());
         double judge_score = Double.parseDouble(paper.get("judge_score").toString());
         JSONArray correct_answer = new JSONArray(paper.get("answer").toString());
-        int choice_count=0;
+        JSONArray typeList = new JSONArray(paper.get("typeList").toString());
+        int multiple_choice_count=0;
+        int single_choice_count=0;
         int judge_count=0;
         for(int i = 0;i<answer.length();i++){
             String temp = answer.getString(i);
-            if((temp.equalsIgnoreCase("true") || temp.equalsIgnoreCase("false")) && temp.equalsIgnoreCase(correct_answer.getString(i))){
-                judge_count++;
-            }else if(temp.equalsIgnoreCase(correct_answer.getString(i))){
-                choice_count++;
+            if(temp.equalsIgnoreCase(correct_answer.getString(i))){
+                if(typeList.getInt(i) == 0){
+                    single_choice_count++;
+                }else if(typeList.getInt(i) == 1){
+                    multiple_choice_count++;
+                }else if(typeList.getInt(i) == 2){
+                    judge_count++;
+                }
             }
         }
-        double score = choice_count*choice_score + judge_count*judge_score;
+        double score = multiple_choice_score*multiple_choice_count + single_choice_score*single_choice_count + judge_count*judge_score;
+        //查询该用户是否已经在考试或是已经考完
+        Map<String,Object> getExamRecordPara = new HashMap<>();
+        getExamRecordPara.put("userId",userId);
+        getExamRecordPara.put("paperId",paperId);
+        Map<String,Object> record = examDao.getExamRecord(getExamRecordPara);
+        //设置参数
         Map<String,Object> parameter = new HashMap<>();
         parameter.put("userId",userId);
         parameter.put("paperId",paperId);
         parameter.put("time",time);
         parameter.put("answer",answer.toString());
+        parameter.put("isFinish",isFinish);
         parameter.put("score",score);
-        int flag = examDao.submitExamPaper(parameter);
+        int flag;
+        if(record == null){
+            flag = examDao.submitExamPaper(parameter);
+        }else{
+            flag = examDao.updateExamPaper(parameter);
+        }
         if(flag == 1){
             code = 200;
             msg = "提交成功";
+            if(isFinish){
+                parameter.put("correct_answer",paper.get("answer"));
+                Map<String,Object> rank = examDao.getExamPaperScoreRank(parameter);
+                parameter.put("rank",rank.get("rank"));
+            }
             respEntity.setData(parameter);
         }else{
             respEntity.setData(null);
         }
+
         respEntity.setCode(code);
         respEntity.setMsg(msg);
         return  respEntity;

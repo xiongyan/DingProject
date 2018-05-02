@@ -3,7 +3,7 @@
 <mapper namespace="com.project.dao.JobInfoDao" >
 
     <select id="getNews" resultType="com.project.model.JobInfo" parameterType="string">
-        select id,title,author,userId,content,time
+        select id,title,author,userId,content,time,quality
         from jobinfo
         WHERE jobType = 'new' and audit = 'true' and quality = #{quality}
     </select>

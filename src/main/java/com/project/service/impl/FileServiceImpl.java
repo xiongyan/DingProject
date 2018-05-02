@@ -17,8 +17,8 @@ import java.util.*;
 @Service("imageService")
 public class FileServiceImpl implements FileService {
 
-    private final static String DIRECTORY = "/mnt/pic/";
-    private final static String URL = "http://47.100.46.80/img/";
+    private final static String DIRECTORY = "/mnt/file/";
+    private final static String URL = "http://47.74.179.186/file/";
 
     @Resource
     private RespEntity respEntity ;
