@@ -48,10 +48,16 @@ public interface ExamDao {
     int UpdateExam(Map<String,Object> parameter);
 
     /**
-     * 生成考试试卷 choice judge
+     * 生成考试试卷 choice
      * @return
      */
-    List<Map<String,Object>> createExamPaper(Map<String,Object> parameter);
+    List<Map<String,Object>> createExamPaperFromChoice(Map<String,Object> parameter);
+
+    /**
+     * 生成考试试卷 judge
+     * @return
+     */
+    List<Map<String,Object>> createExamPaperFromJudge(int num);
 
     /**
      * 保存生成的试卷
@@ -78,4 +84,16 @@ public interface ExamDao {
      * @return
      */
     int submitExamPaper(Map<String,Object> parameter);
+
+    /**
+     * 修改提交的考试试卷记录
+     * @return
+     */
+    int updateExamPaper(Map<String,Object> parameter);
+
+    /**
+     * 获取该考试学生分数的排名
+     * @return
+     */
+    Map<String,Object> getExamPaperScoreRank(Map<String,Object> parameter);
 }
