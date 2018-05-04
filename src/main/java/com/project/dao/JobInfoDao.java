@@ -18,7 +18,7 @@ public interface JobInfoDao {
      * 查询所有学习内容
      * @return
      */
-    List<JobInfo> getLearnContents();
+    List<JobInfo> getLearnContents(String subject);
 
     /**
      * create a new user

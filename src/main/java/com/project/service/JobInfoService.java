@@ -58,7 +58,7 @@ public interface JobInfoService {
      * 查询所有学习内容
      * @return
      */
-    Object getLearnContents();
+    Object getLearnContents(String subject);
 
     /**
      * 置顶党建新闻

@@ -8,10 +8,10 @@
         WHERE jobType = 'new' and audit = 'true' and quality = #{quality}
     </select>
 
-    <select id="getLearnContents" resultType="com.project.model.JobInfo" >
+    <select id="getLearnContents" resultType="com.project.model.JobInfo" parameterType="string">
         select id,title,author,userId,content,time
         from jobinfo
-        WHERE jobType = 'learn' and audit = 'true'
+        WHERE jobType = 'learn' and audit = 'true' and subject = #{subject}
     </select>
 
     <select id="getJobInfoByUserId" resultType="com.project.model.JobInfo" parameterType="com.project.model.JobInfo">
@@ -29,9 +29,9 @@
     <!-- 新增工作信息 -->
     <insert id="createJobInfo" parameterType="com.project.model.JobInfo" >
         insert into jobinfo
-        (title,author,userId,content,time,jobType,audit,quality)
+        (title,author,userId,content,time,jobType,audit,quality,subject)
         values
-        (#{title}, #{author},#{userId},#{content},#{time},#{jobType},#{audit},#{quality})
+        (#{title}, #{author},#{userId},#{content},#{time},#{jobType},#{audit},#{quality},#{subject})
     </insert>
 
     <!--删除工作信息-->
@@ -66,6 +66,9 @@
             </if>
             <if test="time != null and time != ''" >
                 time = #{time},
+            </if>
+            <if test="subject != null and subject != ''" >
+                subject = #{subject},
             </if>
         </set>
         where id = #{id}

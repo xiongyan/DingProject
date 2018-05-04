@@ -104,8 +104,9 @@ public class JobInfoController {
      * @return
      */
     @RequestMapping(value="/learnContent",method= RequestMethod.GET)
-    public Object getLearnContents() {
-        return jobInfoService.getLearnContents();
+    public Object getLearnContents(HttpServletRequest req) {
+        String subject = req.getParameter("subject");
+        return jobInfoService.getLearnContents(subject);
     }
 
     /**

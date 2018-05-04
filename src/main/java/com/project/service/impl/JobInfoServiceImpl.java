@@ -65,6 +65,7 @@ public class JobInfoServiceImpl implements JobInfoService {
         JsonUtil res = new JsonUtil(jsonObject);
         String title = res.getStringOrElse("title");
         String content = res.getStringOrElse("content");
+        String subject = res.getStringOrElse("subject");
         String token = req.getHeader("token");
         JsonUtil jsonUtil = new JsonUtil((JSONObject)CacheUtil.getInstance().get(token));
         String author = jsonUtil.getStringOrElse("name");
@@ -76,6 +77,7 @@ public class JobInfoServiceImpl implements JobInfoService {
         jobInfo.setTitle(title);
         jobInfo.setContent(content);
         jobInfo.setJobType(type);
+        jobInfo.setSubject(subject);
         //判断是那个级别的人创建的
         //获取用户的学习进度
         JSONArray array = jsonUtil.getJSONArray("department",null);
@@ -172,6 +174,7 @@ public class JobInfoServiceImpl implements JobInfoService {
         String title = res.getStringOrElse("title");
         String content = res.getStringOrElse("content");
         String quality = res.getStringOrElse("quality");
+        String subject = res.getStringOrElse("subject");
         int code;
         String msg;
         JobInfo jobInfo = new JobInfo();
@@ -179,6 +182,7 @@ public class JobInfoServiceImpl implements JobInfoService {
         jobInfo.setTitle(title);
         jobInfo.setContent(content);
         jobInfo.setQuality(quality);
+        jobInfo.setSubject(subject);
         int flag = jobInfoDao.UpdateJobInfo(jobInfo);
         if(flag == 1){
             code = 200;
@@ -252,8 +256,8 @@ public class JobInfoServiceImpl implements JobInfoService {
      * 查询所有学习内容
      * @return
      */
-    public Object getLearnContents() {
-        List<JobInfo> list = jobInfoDao.getLearnContents();
+    public Object getLearnContents(String subject) {
+        List<JobInfo> list = jobInfoDao.getLearnContents(subject);
         int code = 500;
         String msg = "内部发生异常";
         if(list != null){
