@@ -83,7 +83,7 @@ public class DingUtil {
     public JSONObject getUser(String userId){
         String token = getToken(CORPID,CORPSECRET);
         HttpUtil httpUtil = new HttpUtil();
-        String url="https://oapi.dingtalk.com/user/get?access_token="+token+"&userid=zhangsan"+userId;
+        String url="https://oapi.dingtalk.com/user/get?access_token="+token+"&userid="+userId;
         JSONObject res=new JSONObject(httpUtil.get(url));
         if(res.getInt("errcode") == 0){
             return res;
