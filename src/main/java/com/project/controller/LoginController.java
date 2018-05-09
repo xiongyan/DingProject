@@ -19,10 +19,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by laishun on 2018/3/9.
@@ -96,13 +93,12 @@ public class LoginController {
             if(obj != null) {
                 Iterator var2 = obj.keySet().iterator();
                 while(var2.hasNext()) {
-                    Map.Entry e = (Map.Entry)var2.next();
-                    Object value = e.getValue();
+                    String key = (String)var2.next();
+                    Object value = wrap(obj.opt(key));
                     if(value != null) {
-                        result.put(String.valueOf(e.getKey()), wrap(value));
+                        result.put(key, value);
                     }
                 }
-
                 //判断是否缓存中有啦
                 Object token_old = CacheUtil.getInstance().get(userId);
                 if(token_old != null && !"".contentEquals(token_old.toString())){
@@ -148,20 +144,29 @@ public class LoginController {
         try {
             if(object == null) {
                 return null;
-            } else if(!(object instanceof JSONObject) && !(object instanceof JSONArray) && !(object instanceof JSONString) && !(object instanceof Byte) && !(object instanceof Character) && !(object instanceof Short) && !(object instanceof Integer) && !(object instanceof Long) && !(object instanceof Boolean) && !(object instanceof Float) && !(object instanceof Double) && !(object instanceof String) && !(object instanceof BigInteger) && !(object instanceof BigDecimal)) {
-                if(object instanceof Collection) {
-                    Collection exception2 = (Collection)object;
-                    return new JSONArray(exception2);
-                } else if(object.getClass().isArray()) {
-                    return new JSONArray(object);
-                } else if(object instanceof Map) {
-                    Map exception1 = (Map)object;
-                    return new JSONObject(exception1);
-                } else {
-                    Package exception = object.getClass().getPackage();
-                    String objectPackageName = exception != null?exception.getName():"";
-                    return !objectPackageName.startsWith("java.") && !objectPackageName.startsWith("javax.") && object.getClass().getClassLoader() != null?new JSONObject(object):object.toString();
+            }else if(object instanceof JSONObject) {
+                Map<String,Object> result = new HashMap<>();
+                JSONObject obj = (JSONObject)object;
+                Iterator var2 = obj.keySet().iterator();
+                while(var2.hasNext()) {
+                    String key = (String)var2.next();
+                    Object value = wrap(obj.opt(key));
+                    if(value != null) {
+                        result.put(key, value);
+                    }
                 }
+                return result;
+            } else if(object instanceof JSONArray) {
+                List<Object> list = new ArrayList<>();
+                JSONArray array = (JSONArray)object;
+                Iterator var2 = array.iterator();
+                while(var2.hasNext()) {
+                    Object obj = wrap(var2.next());
+                    if(obj != null) {
+                        list.add(obj);
+                    }
+                }
+                return list;
             } else {
                 return object;
             }
