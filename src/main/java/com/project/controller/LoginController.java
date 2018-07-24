@@ -1,12 +1,8 @@
 package com.project.controller;
 
-import com.project.model.RespEntity;
 import com.project.model.User;
 import com.project.service.LoginService;
-import com.project.util.CacheUtil;
-import com.project.util.DingUtil;
-import com.project.util.Md5Util;
-import com.project.util.RequestUtil;
+import com.project.util.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONString;
@@ -35,9 +31,6 @@ public class LoginController {
 
     @Resource
     private RequestUtil requestUtil;
-
-    @Resource
-    private RespEntity respEntity;
 
     @RequestMapping(value="/sign",method= RequestMethod.GET)
     @ResponseBody
@@ -79,8 +72,6 @@ public class LoginController {
     @RequestMapping(value="/login",method= RequestMethod.POST)
     @ResponseBody
     public Object login(HttpServletRequest req) {
-        int code = 500;
-        String msg = "没找到该用户";
         //获取用户的登陆信息，并且进行认证
         JSONObject res = requestUtil.getBody(req);
         String userId = res.getString("userId");
@@ -110,16 +101,13 @@ public class LoginController {
                 result.put("token", token_access);
                 CacheUtil.getInstance().put(userId,token_access);
                 CacheUtil.getInstance().put(token_access, obj);
-                respEntity.setData(result);
-                code = 200;
-                msg = "登陆成功";
+
+                return ResultUtil.success(result);
             }
         }else{
-            respEntity.setData(null);
+            return ResultUtil.error(500,"没找到该用户");
         }
-        respEntity.setCode(code);
-        respEntity.setMsg(msg);
-        return  respEntity;
+        return null;
     }
 
     @RequestMapping(value = "/logout", method= RequestMethod.POST)
@@ -129,10 +117,8 @@ public class LoginController {
         JSONObject obj = (JSONObject)CacheUtil.getInstance().get(token_access);
         CacheUtil.getInstance().remove(token_access);
         CacheUtil.getInstance().remove(obj.getString("userid"));
-        respEntity.setCode(200);
-        respEntity.setMsg("成功退出");
-        respEntity.setData(null);
-        return respEntity;
+
+        return ResultUtil.success(null);
     }
 
     /**

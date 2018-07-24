@@ -3,12 +3,16 @@
 <mapper namespace="com.project.dao.UserDao" >
 
     <select id="getUsers" resultType="com.project.model.User" >
+        select id,name
+        from users
+    </select>
+    <!--<select id="getUsers" resultType="com.project.model.User" >
         select id,name,gender,email,password,phone,status,role,remark,idCard,insertDate
         from users
         where status = 1
     </select>
 
-    <!-- 新增用户 -->
+    &lt;!&ndash; 新增用户 &ndash;&gt;
     <insert id="createUser" parameterType="com.project.model.User" >
         insert into users
         (name,gender,email,password,phone,status,role,remark,idCard,insertDate)
@@ -16,10 +20,10 @@
         (#{name}, #{gender},#{email},#{password},#{phone},#{status}, #{role}, #{remark}, #{idCard},#{insertDate})
     </insert>
 
-    <!--删除该用户-->
-    <!--<delete id="deleteUser" parameterType="int">
+    &lt;!&ndash;删除该用户&ndash;&gt;
+    &lt;!&ndash;<delete id="deleteUser" parameterType="int">
         DELETE FROM users WHERE id = #{userId}
-    </delete>-->
+    </delete>&ndash;&gt;
     <update id="deleteUser" parameterType="int" >
         update users
         <set >
@@ -34,7 +38,7 @@
         WHERE id = #{id}
     </select>
 
-    <!-- 更新用户信息-->
+    &lt;!&ndash; 更新用户信息&ndash;&gt;
     <update id="updateUser" parameterType="com.project.model.User" >
         update users
         <set >
@@ -69,18 +73,18 @@
         where id = #{id}
     </update>
 
-    <!--查找用户-->
+    &lt;!&ndash;查找用户&ndash;&gt;
     <select id="findUserByPhone" resultType="com.project.model.User" parameterType="string">
         select id,name,gender,email,password,phone,status,role,remark,idCard,insertDate
         from users
         where phone = #{phone} and status = 1
     </select>
 
-    <!--用户登录-->
+    &lt;!&ndash;用户登录&ndash;&gt;
     <select id="findUserByUserId" resultType="com.project.model.User" parameterType="string" >
         select id,name,gender,email,password,phone,status,role,remark,idCard,insertDate
         from users
         where phone = #{phone} and password = #{password} and status = 1
     </select>
-
+-->
 </mapper>

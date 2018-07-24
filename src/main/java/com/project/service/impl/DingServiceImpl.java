@@ -2,10 +2,11 @@ package com.project.service.impl;
 
 import com.project.model.App;
 import com.project.model.Record;
-import com.project.model.RespEntity;
+//import com.project.model.RespEntity;
 import com.project.service.DingService;
 import com.project.util.DingUtil;
 import com.project.util.JsonUtil;
+import com.project.util.ResultUtil;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
@@ -22,8 +23,6 @@ import java.util.List;
 @Service("dingService")
 public class DingServiceImpl implements DingService {
 
-    @Resource
-    private RespEntity respEntity;
     /**
      * 获取第三方应用
      * @return
@@ -34,15 +33,10 @@ public class DingServiceImpl implements DingService {
         DingUtil dingUtil = DingUtil.getInstance();
         JSONArray res = dingUtil.getThirdAppList();
         if(res == null){
-            respEntity.setData(null);
+            return ResultUtil.error(500,"查询出错");
         }else {
-            code = 200;
-            msg = "查询成功";
-            respEntity.setData(jsonToApps(res));
+            return ResultUtil.success(jsonToApps(res));
         }
-        respEntity.setCode(code);
-        respEntity.setMsg(msg);
-        return respEntity;
     }
 
     /**
@@ -62,18 +56,14 @@ public class DingServiceImpl implements DingService {
             DingUtil dingUtil = DingUtil.getInstance();
             JSONArray res = dingUtil.gitRecordList(department,startTime,endTime);
             if(res == null){
-                respEntity.setData(null);
+                return ResultUtil.error(500,"查询出错");
             }else {
-                code = 200;
-                msg = "查询成功";
-                respEntity.setData(jsonToRecords(res));
+                return ResultUtil.success(jsonToRecords(res));
             }
         }catch (Exception e){
             e.printStackTrace();
         }
-        respEntity.setCode(code);
-        respEntity.setMsg(msg);
-        return respEntity;
+        return null;
     }
 
     /**

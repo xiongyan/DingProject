@@ -11,36 +11,5 @@ public interface UserService {
      * @return
      */
     Object getUsers();
-
-    /**
-     * create a new user
-     * @param req
-     * @return
-     */
-    Object createUser(HttpServletRequest req);
-
-    /**
-     * delete user
-     * @param userId
-     * @return
-     */
-    Object deleteUser(int userId);
-
-    /**
-     * get house by id
-     * @param userId
-     * @return
-     */
-    Object getUser(int userId);
-
-    /**
-     * get house by id
-     * @param userId
-     * @param req
-     * @return
-     */
-    Object UpdateUser(HttpServletRequest req, int userId);
-
-
 }
 
