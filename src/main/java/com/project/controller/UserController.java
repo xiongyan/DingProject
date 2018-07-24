@@ -28,44 +28,5 @@ public class UserController {
         return userService.getUsers();
     }
 
-    /**
-     * 创建用户信息
-     * @param req
-     * @return
-     */
-    @RequestMapping(value="/users",method= RequestMethod.POST)
-    public Object createUser(HttpServletRequest req){
-        return userService.createUser(req);
-    }
 
-    /**
-     * 删除用户信息
-     * @param userId
-     * @return
-     */
-    @RequestMapping(value="/users/{userId}",method= RequestMethod.DELETE)
-    public Object deleteUser(@PathVariable int userId){
-        return userService.deleteUser(userId);
-    }
-
-    /**
-     * 查询单个租客
-     * @param userId
-     * @return
-     */
-    @RequestMapping(value="/users/{userId}",method= RequestMethod.GET)
-    public Object getUser(@PathVariable int userId){
-        return userService.getUser(userId);
-    }
-
-    /**
-     * 修改租客信息
-     * @param req
-     * @param userId
-     * @return
-     */
-    @RequestMapping(value="/users/{userId}",method= RequestMethod.POST)
-    public Object UpdateUser(HttpServletRequest req,@PathVariable int userId){
-        return userService.UpdateUser(req, userId);
-    }
 }

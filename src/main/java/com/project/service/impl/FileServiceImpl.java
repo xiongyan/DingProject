@@ -1,7 +1,7 @@
 package com.project.service.impl;
 
-import com.project.model.RespEntity;
 import com.project.service.FileService;
+import com.project.util.ResultUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
@@ -10,6 +10,8 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.*;
 import java.util.*;
+
+import static com.project.util.ResultUtil.error;
 
 /**
  * Created by laishun on 2018/3/12.
@@ -20,8 +22,8 @@ public class FileServiceImpl implements FileService {
     private final static String DIRECTORY = "/mnt/file/";
     private final static String URL = "http://47.74.179.186/file/";
 
-    @Resource
-    private RespEntity respEntity ;
+//    @Resource
+//    private RespEntity respEntity ;
 
     /**
      * 上传图片
@@ -50,21 +52,16 @@ public class FileServiceImpl implements FileService {
                 multipart.transferTo(file_path);
                 list.add(URL+newFileName);
             }
-            respEntity.setData(list);
             if(list.size() == 0){
-                code = 500;
-                msg = "没有传入数据";
-                respEntity.setData(null);
+                return ResultUtil.error(500,"没有传入数据");
             }
         }catch (Exception e){
             e.printStackTrace();
             code = 500;
             msg = "服务器内容异常";
-            respEntity.setData(null);
+            return ResultUtil.error(500,"服务器内容异常");
         }
-        respEntity.setCode(code);
-        respEntity.setMsg(msg);
-        return respEntity;
+        return null;
     }
 
     /**
