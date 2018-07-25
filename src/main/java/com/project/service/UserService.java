@@ -1,8 +1,6 @@
 package com.project.service;
 
-import com.project.dao.Result;
-
-import javax.servlet.http.HttpServletRequest;
+import com.project.model.Result;
 
 /**
  * Created by laishun on 2018/3/9.

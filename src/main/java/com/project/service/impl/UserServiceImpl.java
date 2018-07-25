@@ -1,17 +1,15 @@
 package com.project.service.impl;
 
-import com.project.dao.Result;
+import com.project.model.Result;
 import com.project.dao.UserDao;
 import com.project.enums.ResultEnum;
 import com.project.exception.UserException;
 import com.project.model.*;
 import com.project.service.UserService;
 import com.project.util.*;
-import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**

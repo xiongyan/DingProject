@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.project.dao.ArticleDao" >
+
+    <select id="getArticles" resultType="hashmap" >
+        select urls,author,type_ids,abstract,status,credit,period,cover,coursetype,banner,pubtime,source,title,content,updated,dept_id,article_fid,comment,recommend,created,article_id,user_id
+        from articles
+    </select>
+
+    <select id="getArticleById" resultType="hashmap" parameterType="int">
+        select urls,author,type_ids,abstract,status,credit,period,cover,coursetype,banner,pubtime,source,title,content,updated,dept_id,article_fid,comment,recommend,created,article_id,user_id
+        from articles
+        WHERE article_id = #{articleId}
+    </select>
+
+    <!-- 新增article -->
+    <insert id="createArticle" parameterType="hashmap" >
+        insert into articles
+        (urls,author,type_ids,abstract,status,credit,period,cover,coursetype,banner,pubtime,source,title,content,updated,dept_id,article_fid,comment,recommend,created,user_id)
+        values
+        (#{urls},#{author},#{type_ids},#{abstract},#{status},#{credit},#{period},#{cover},#{coursetype},#{banner},#{pubtime},#{source},#{title},#{content},#{updated},#{dept_id},#{article_fid},#{comment},#{recommend},#{created},#{user_id})
+    </insert>
+
+    <!--删除article-->
+    <delete id="deleteUser" parameterType="int">
+        DELETE FROM articles WHERE article_id = #{articleId}
+    </delete>
+
+    <!-- 更新article信息-->
+    <update id="updateArticle" parameterType="hashmap" >
+        update articles
+        <set >
+            <if test="urls != null and urls != ''" >
+                urls = #{urls},
+            </if>
+            <if test="author != null  and author != ''" >
+                author = #{author},
+            </if>
+            <if test="type_ids != null and type_ids != ''" >
+                type_ids = #{type_ids},
+            </if>
+            <if test="abstract != null  and abstract != ''" >
+                abstract = #{abstract},
+            </if>
+            <if test="status != null " >
+                status = #{status},
+            </if>
+            <if test="credit != null" >
+                credit = #{credit},
+            </if>
+            <if test="period != null " >
+                period = #{period},
+            </if>
+            <if test="cover != null and cover != '' " >
+                cover = #{cover},
+            </if>
+            <if test="coursetype != null " >
+                coursetype = #{coursetype},
+            </if>
+            <if test="banner != null  " >
+                banner = #{banner},
+            </if>
+            <if test="pubtime != null and pubtime != '' " >
+                pubtime = #{pubtime},
+            </if>
+            <if test="source != null and source != '' " >
+                source = #{source},
+            </if>
+            <if test="title != null and title != '' " >
+                title = #{title},
+            </if>
+            <if test="content != null and content != '' " >
+                content = #{content},
+            </if>
+            <if test="updated != null and updated != '' " >
+                updated = #{updated},
+            </if>
+            <if test="dept_id != null " >
+                dept_id = #{dept_id},
+            </if>
+            <if test="article_fid != null " >
+                article_fid = #{article_fid},
+            </if>
+            <if test="comment != null " >
+                comment = #{comment},
+            </if>
+            <if test="recommend != null" >
+                recommend = #{recommend},
+            </if>
+            <if test="created != null and created != '' " >
+                created = #{created},
+            </if>
+            <if test="user_id != null and user_id != '' " >
+                user_id = #{user_id},
+            </if>
+        </set>
+        where article_id = #{article_id}
+    </update>
+</mapper>

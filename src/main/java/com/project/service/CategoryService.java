@@ -1,6 +1,6 @@
 package com.project.service;
 
-import com.project.dao.Result;
+import com.project.model.Result;
 
 public interface CategoryService {
 

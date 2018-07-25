@@ -1,12 +1,12 @@
 package com.project.util;
 
-import com.project.dao.Result;
+import com.project.model.Result;
 
 public class ResultUtil {
 
     public static Result success(Object object){
         Result result = new Result();
-        result.setCode(0);
+        result.setCode(200);
         result.setMsg("成功");
         result.setData(object);
         return result;

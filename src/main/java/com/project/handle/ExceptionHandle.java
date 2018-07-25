@@ -1,6 +1,6 @@
 package com.project.handle;
 
-import com.project.dao.Result;
+import com.project.model.Result;
 import com.project.exception.UserException;
 import com.project.util.ResultUtil;
 import org.slf4j.Logger;

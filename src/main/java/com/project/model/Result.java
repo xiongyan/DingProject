@@ -1,4 +1,4 @@
-package com.project.dao;
+package com.project.model;
 
 public class Result<T> {
     /** 错误码. */
