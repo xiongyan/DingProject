@@ -1,5 +1,7 @@
 package com.project.service;
 
+import com.project.dao.Result;
+
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -10,6 +12,6 @@ public interface UserService {
      * 获取用户列表
      * @return
      */
-    Object getUsers();
+    Result getUsers();
 }
 
