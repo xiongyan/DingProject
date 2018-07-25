@@ -1,6 +1,9 @@
 package com.project.service.impl;
 
+import com.project.dao.Result;
 import com.project.dao.UserDao;
+import com.project.enums.ResultEnum;
+import com.project.exception.UserException;
 import com.project.model.*;
 import com.project.service.UserService;
 import com.project.util.*;
@@ -28,12 +31,12 @@ public class UserServiceImpl implements UserService {
      * @return
      */
     @Override
-    public Object getUsers() {
+    public Result getUsers() {
         List<User> list = userDao.getUsers();
         if(list != null){
             return ResultUtil.success(list);
         }else{
-            return ResultUtil.error(500,"内部发生异常");
+            throw new UserException(ResultEnum.ERROR);
         }
     }
 }

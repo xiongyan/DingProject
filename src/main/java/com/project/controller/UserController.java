@@ -1,5 +1,6 @@
 package com.project.controller;
 
+import com.project.dao.Result;
 import com.project.service.UserService;
 import com.project.util.RequestUtil;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,9 +25,7 @@ public class UserController {
      * @return
      */
     @RequestMapping(value="/users",method= RequestMethod.GET)
-    public Object getUsers() {
+    public Result getUsers() throws Exception{
         return userService.getUsers();
     }
-
-
 }
