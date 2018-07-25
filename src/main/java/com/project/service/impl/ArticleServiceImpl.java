@@ -3,6 +3,7 @@ package com.project.service.impl;
 import com.project.dao.ArticleDao;
 import com.project.service.ArticleService;
 import com.project.util.DateUtil;
+import com.project.util.JsonUtil;
 import com.project.util.RequestUtil;
 import com.project.util.ResultUtil;
 import org.json.JSONObject;
@@ -189,4 +190,65 @@ public class ArticleServiceImpl implements ArticleService {
         return map;
     }
 
+    /**
+     * 查询文章和类型的关联关系
+     * @param articleId
+     * @return
+     */
+    public Object getTypeByArticle(int articleId) {
+        List<Map<String,Object>> res = null;
+        try {
+            res = articleDao.getTypeByArticle(articleId);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return res;
+    }
+
+    /**
+     * 创建文章和类型的关联关系
+     * @param articleId
+     * @return
+     */
+    public Object createRelationTypeWithArticle(HttpServletRequest req, int articleId) {
+        try{
+            JsonUtil obj = new JsonUtil(requestUtil.getBody(req));
+            int type_id = obj.getIntOrElse("type_id",-1);
+            if(type_id != -1){
+                Map<String,Object> parameter = new HashMap<>();
+                parameter.put("type_id",type_id);
+                parameter.put("article_id",articleId);
+                int flag = articleDao.createRelationTypeWithArticle(parameter);
+                if(flag == 1){
+                    return ResultUtil.success("成功");
+                }else {
+                    return ResultUtil.error(500,"创建关系失败");
+                }
+            }else{
+                return ResultUtil.error(500,"type_id参数异常");
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResultUtil.error(500,"内部异常");
+        }
+    }
+
+    /**
+     * 删除文章和类型的关联关系
+     * @param articleId
+     * @return
+     */
+    public Object deleteRelationTypeWithArticle(int articleId) {
+        try{
+            int flag = articleDao.deleteRelationTypeWithArticle(articleId);
+            if(flag > 0){
+                return ResultUtil.success("删除成功");
+            }else {
+                return ResultUtil.success("关联关系已经删除完");
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResultUtil.error(500,"内部异常");
+        }
+    }
 }

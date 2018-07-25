@@ -67,4 +67,34 @@ public class ArticleController {
     public Object deleteArticle(@PathVariable int articleId){
         return articleService.deleteArticle(articleId);
     }
+
+    /**
+     * 查询文章和类型的关联关系
+     * @param articleId
+     * @return
+     */
+    @RequestMapping(value="/article/{articleId}/type",method= RequestMethod.GET)
+    public Object getTypeByArticle(@PathVariable int articleId) {
+        return articleService.getTypeByArticle(articleId);
+    }
+
+    /**
+     * 创建文章和类型的关联关系
+     * @param articleId
+     * @return
+     */
+    @RequestMapping(value="/article/{articleId}/type",method= RequestMethod.POST)
+    public Object createRelationTypeWithArticle(HttpServletRequest req,@PathVariable int articleId) {
+        return articleService.createRelationTypeWithArticle(req,articleId);
+    }
+
+    /**
+     * 删除文章和类型的关联关系
+     * @param articleId
+     * @return
+     */
+    @RequestMapping(value="/article/{articleId}/type",method= RequestMethod.DELETE)
+    public Object deleteRelationTypeWithArticle(@PathVariable int articleId) {
+        return articleService.deleteRelationTypeWithArticle(articleId);
+    }
 }

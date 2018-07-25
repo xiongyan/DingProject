@@ -103,4 +103,29 @@
         </set>
         where article_id = #{article_id}
     </update>
+
+    <select id="getTypeByArticle" resultType="hashmap" parameterType="int">
+        select at_id,article_id,sw_article_type.type_id,tmp.type_name
+        from sw_article_type
+        LEFT JOIN (
+        SELECT type_id,type_name
+        From   sw_type
+        )tmp
+        on sw_article_type.type_id = tmp.type_id
+        WHERE  article_id = #{articleId}
+    </select>
+
+    <!-- 新增article与type关系 -->
+    <insert id="createRelationTypeWithArticle" parameterType="hashmap" >
+        insert into sw_article_type
+        (article_id,type_id)
+        values
+        (#{article_id},#{type_id})
+    </insert>
+
+    <!--删除article-->
+    <delete id="deleteRelationTypeWithArticle" parameterType="int">
+        DELETE FROM sw_article_type WHERE article_id = #{articleId}
+    </delete>
+
 </mapper>

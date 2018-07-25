@@ -41,5 +41,26 @@ public interface ArticleService {
      * @return
      */
     Object deleteArticle(int userId);
+
+    /**
+     * 查询文章和类型的关联关系
+     * @param articleId
+     * @return
+     */
+    Object getTypeByArticle(int articleId);
+
+    /**
+     * 创建文章和类型的关联关系
+     * @param articleId,req
+     * @return
+     */
+    Object createRelationTypeWithArticle(HttpServletRequest req,int articleId);
+
+    /**
+     * 删除文章和类型的关联关系
+     * @param articleId
+     * @return
+     */
+    Object deleteRelationTypeWithArticle(int articleId);
 }
 

@@ -46,4 +46,25 @@ public interface ArticleDao {
      */
     List<Map<String,Object>> getTypeIds();
 
+    /**
+     * 查询文章和类型的关联关系
+     * @param articleId
+     * @return
+     */
+    List<Map<String,Object>> getTypeByArticle(int articleId);
+
+    /**
+     * 创建文章和类型的关联关系
+     * @param parameter
+     * @return
+     */
+    int createRelationTypeWithArticle(Map<String,Object> parameter);
+
+    /**
+     * 删除文章和类型的关联关系
+     * @param articleId
+     * @return
+     */
+    int deleteRelationTypeWithArticle(int articleId);
+
 }
