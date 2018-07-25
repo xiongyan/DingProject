@@ -1,16 +1,15 @@
 package com.project.service.impl;
 
 import com.project.dao.ArticleDao;
-import com.project.model.User;
 import com.project.service.ArticleService;
 import com.project.util.DateUtil;
-import com.project.util.JsonUtil;
 import com.project.util.RequestUtil;
 import com.project.util.ResultUtil;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,9 +32,24 @@ public class ArticleServiceImpl implements ArticleService {
      */
     @Override
     public Object getArticles() {
+        Map<String,Object> res = new HashMap<>();
         try {
             List<Map<String,Object>> list = articleDao.getArticles();
-            return ResultUtil.success(list);
+            if(list.size() > 0){
+                List<Map<String,Object>> typeIds = articleDao.getTypeIds();
+                Map<String,List<Map<String,Object>>> tmp = parseTypeIds(typeIds);
+                for(Map<String,Object> map:list){
+                    String article = map.get("article_id").toString();
+                    if(tmp.keySet().contains(article)){
+                        map.put("type_ids",tmp.get(article));
+                    }else{
+                        map.put("type_ids",new ArrayList<>());
+                    }
+                }
+            }
+            res.put("total", list.size());
+            res.put("rows",list);
+            return res;
         }catch (Exception e){
             e.printStackTrace();
             return ResultUtil.error(500,"内部查询错误");
@@ -51,7 +65,17 @@ public class ArticleServiceImpl implements ArticleService {
     public Object getArticleById(int articleId){
         try {
             Map<String,Object> article = articleDao.getArticleById(articleId);
-            return ResultUtil.success(article);
+            if(article != null){
+                List<Map<String,Object>> typeIds = articleDao.getTypeIds();
+                Map<String,List<Map<String,Object>>> tmp = parseTypeIds(typeIds);
+                String key = article.get("article_id").toString();
+                if(tmp.keySet().contains(key)){
+                    article.put("type_ids",tmp.get(key));
+                }else{
+                    article.put("type_ids",new ArrayList<>());
+                }
+            }
+            return article;
         }catch (Exception e){
             e.printStackTrace();
             return ResultUtil.error(500,"内部查询错误");
@@ -70,7 +94,32 @@ public class ArticleServiceImpl implements ArticleService {
         for(String key : jsonObject.keySet()){
             article.put(key,jsonObject.get(key));
         }
+        if(!article.keySet().contains("recommend")){
+            article.put("recommend",0);
+        }
+        if(!article.keySet().contains("status")){
+            article.put("status",1);
+        }
+        if(!article.keySet().contains("period")){
+            article.put("period",0);
+        }
+        if(!article.keySet().contains("coursetype")){
+            article.put("coursetype",1);
+        }
+        if(!article.keySet().contains("banner")){
+            article.put("banner",1);
+        }
+        if(!article.keySet().contains("dept_id")){
+            article.put("dept_id",0);
+        }
+        if(!article.keySet().contains("article_fid")){
+            article.put("article_fid",0);
+        }
+        if(!article.keySet().contains("user_id")){
+            article.put("user_id","undefined");
+        }
         article.put("created",DateUtil.getTodayTimeStamp());
+        article.put("updated",DateUtil.getTodayTimeStamp());
         //保存新article
         int flag = articleDao.createArticle(article);
         if(flag == 1){
@@ -119,6 +168,25 @@ public class ArticleServiceImpl implements ArticleService {
            e.printStackTrace();
            return ResultUtil.error(500,"内部异常");
        }
+    }
+
+    /**
+     * 格式化typeids
+     * @return
+     */
+    private Map<String,List<Map<String,Object>>> parseTypeIds(List<Map<String,Object>> list){
+        Map<String,List<Map<String,Object>>> map = new HashMap<>();
+        for(Map<String,Object> obj : list){
+            String article = obj.get("article_id").toString();
+            if(map.keySet().contains(article)){
+                map.get(article).add(obj);
+            }else{
+                List<Map<String,Object>> tmp = new ArrayList<>();
+                tmp.add(obj);
+                map.put(article,tmp);
+            }
+        }
+        return map;
     }
 
 }

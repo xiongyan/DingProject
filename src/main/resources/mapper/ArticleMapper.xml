@@ -3,43 +3,50 @@
 <mapper namespace="com.project.dao.ArticleDao" >
 
     <select id="getArticles" resultType="hashmap" >
-        select urls,author,type_ids,abstract,status,credit,period,cover,coursetype,banner,pubtime,source,title,content,updated,dept_id,article_fid,comment,recommend,created,article_id,user_id
-        from articles
+        select urls,author,abstract,status,credit,period,cover,coursetype,banner,pubtime,source,title,content,updated,dept_id,article_fid,comment,recommend,created,article_id,user_id
+        from sw_articles
+    </select>
+
+    <select id="getTypeIds" resultType="hashmap" >
+        select at_id,article_id,sw_article_type.type_id,tmp.type_name
+        from sw_article_type
+        LEFT JOIN (
+          SELECT type_id,type_name
+          From   sw_type
+        )tmp
+        on sw_article_type.type_id = tmp.type_id
     </select>
 
     <select id="getArticleById" resultType="hashmap" parameterType="int">
-        select urls,author,type_ids,abstract,status,credit,period,cover,coursetype,banner,pubtime,source,title,content,updated,dept_id,article_fid,comment,recommend,created,article_id,user_id
-        from articles
+        select urls,author,abstract,status,credit,period,cover,coursetype,banner,pubtime,source,title,content,updated,dept_id,article_fid,comment,recommend,created,article_id,user_id
+        from sw_articles
         WHERE article_id = #{articleId}
     </select>
 
     <!-- 新增article -->
     <insert id="createArticle" parameterType="hashmap" >
-        insert into articles
-        (urls,author,type_ids,abstract,status,credit,period,cover,coursetype,banner,pubtime,source,title,content,updated,dept_id,article_fid,comment,recommend,created,user_id)
+        insert into sw_articles
+        (author,abstract,status,credit,period,cover,coursetype,banner,pubtime,source,title,content,updated,dept_id,article_fid,comment,recommend,created,user_id)
         values
-        (#{urls},#{author},#{type_ids},#{abstract},#{status},#{credit},#{period},#{cover},#{coursetype},#{banner},#{pubtime},#{source},#{title},#{content},#{updated},#{dept_id},#{article_fid},#{comment},#{recommend},#{created},#{user_id})
+        (#{author},#{abstract},#{status},#{credit},#{period},#{cover},#{coursetype},#{banner},#{pubtime},#{source},#{title},#{content},#{updated},#{dept_id},#{article_fid},#{comment},#{recommend},#{created},#{user_id})
     </insert>
 
     <!--删除article-->
     <delete id="deleteUser" parameterType="int">
-        DELETE FROM articles WHERE article_id = #{articleId}
+        DELETE FROM sw_articles WHERE article_id = #{articleId}
     </delete>
 
     <!-- 更新article信息-->
     <update id="updateArticle" parameterType="hashmap" >
-        update articles
+        update sw_articles
         <set >
-            <if test="urls != null and urls != ''" >
+            <if test="urls != null" >
                 urls = #{urls},
             </if>
-            <if test="author != null  and author != ''" >
+            <if test="author != null" >
                 author = #{author},
             </if>
-            <if test="type_ids != null and type_ids != ''" >
-                type_ids = #{type_ids},
-            </if>
-            <if test="abstract != null  and abstract != ''" >
+            <if test="abstract != null " >
                 abstract = #{abstract},
             </if>
             <if test="status != null " >
@@ -51,7 +58,7 @@
             <if test="period != null " >
                 period = #{period},
             </if>
-            <if test="cover != null and cover != '' " >
+            <if test="cover != null" >
                 cover = #{cover},
             </if>
             <if test="coursetype != null " >
@@ -60,19 +67,19 @@
             <if test="banner != null  " >
                 banner = #{banner},
             </if>
-            <if test="pubtime != null and pubtime != '' " >
+            <if test="pubtime != null" >
                 pubtime = #{pubtime},
             </if>
-            <if test="source != null and source != '' " >
+            <if test="source != null " >
                 source = #{source},
             </if>
-            <if test="title != null and title != '' " >
+            <if test="title != null " >
                 title = #{title},
             </if>
-            <if test="content != null and content != '' " >
+            <if test="content != null" >
                 content = #{content},
             </if>
-            <if test="updated != null and updated != '' " >
+            <if test="updated != null" >
                 updated = #{updated},
             </if>
             <if test="dept_id != null " >
@@ -87,10 +94,10 @@
             <if test="recommend != null" >
                 recommend = #{recommend},
             </if>
-            <if test="created != null and created != '' " >
+            <if test="created != null" >
                 created = #{created},
             </if>
-            <if test="user_id != null and user_id != '' " >
+            <if test="user_id != null" >
                 user_id = #{user_id},
             </if>
         </set>

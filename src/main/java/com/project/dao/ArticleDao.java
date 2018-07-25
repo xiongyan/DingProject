@@ -40,4 +40,10 @@ public interface ArticleDao {
      */
     int deleteArticle(int articleId);
 
+    /**
+     * 获取type_ids
+     * @return
+     */
+    List<Map<String,Object>> getTypeIds();
+
 }
