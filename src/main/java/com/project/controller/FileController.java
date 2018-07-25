@@ -17,7 +17,7 @@ public class FileController {
     @Resource
     private FileService fileService;
 
-    @RequestMapping(value="/fileUpload",method= RequestMethod.POST)
+    @RequestMapping(value="/upload",method= RequestMethod.POST)
     public Object fileUpload(HttpServletRequest request) {
         return fileService.fileUpload(request);
     }

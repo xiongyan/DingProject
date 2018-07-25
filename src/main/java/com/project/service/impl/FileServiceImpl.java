@@ -16,14 +16,11 @@ import static com.project.util.ResultUtil.error;
 /**
  * Created by laishun on 2018/3/12.
  */
-@Service("imageService")
+@Service("fileService")
 public class FileServiceImpl implements FileService {
 
     private final static String DIRECTORY = "/mnt/file/";
     private final static String URL = "http://47.74.179.186/file/";
-
-//    @Resource
-//    private RespEntity respEntity ;
 
     /**
      * 上传图片
@@ -32,8 +29,6 @@ public class FileServiceImpl implements FileService {
      */
     @Override
     public Object fileUpload(HttpServletRequest request){
-        int code = 200;
-        String msg = "上传成功";
         List<String> list = new ArrayList<>();
         try {
             StandardMultipartHttpServletRequest req = (StandardMultipartHttpServletRequest) request;
@@ -57,8 +52,6 @@ public class FileServiceImpl implements FileService {
             }
         }catch (Exception e){
             e.printStackTrace();
-            code = 500;
-            msg = "服务器内容异常";
             return ResultUtil.error(500,"服务器内容异常");
         }
         return null;

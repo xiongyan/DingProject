@@ -16,9 +16,11 @@ import java.util.Formatter;
  */
 public class DingUtil {
 
-    public static String CORPID = "ding31148f160c24897635c2f4657eb6378f"; // 企业Id
-    public static String CORPSECRET = "7RzFBvHzogkyN2NZ8jii8dyNrWHNCfJiKIHNnNrolWOARMuYfu9o9_YcsQ6jEQah"; // 企业应用的凭证密钥
-    public static Long   AGENTID = 169284840L;//微应用的ID
+    public static String CORPID = "ding377ef05619dd758735c2f4657eb6378f"; // 企业Id
+    public static String CORPSECRET = "hg6_0b51wAjOijTeXDEDULYtpUYs_NSiYOwol_5XDjqBpePANLJ1S0Csij71SHbQ"; // 企业应用的凭证密钥
+    public static String SSOSECRET  = "h61SzqkT2xpaJeFSSpxN2N931nReOqkV_PXqpqeP3Gv7kedylyayNuVJ7xJbKP1b";
+    public static Long   AGENTID = 176613947L;//微应用的ID
+    public static String CALLBACKURL =  "http://api.lpszzb.gov.cn/dding";
     private static DingUtil dingUtil = null;
     private static HttpUtil httpUtil = null;
 
