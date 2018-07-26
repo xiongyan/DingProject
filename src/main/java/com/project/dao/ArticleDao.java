@@ -61,10 +61,36 @@ public interface ArticleDao {
     int createRelationTypeWithArticle(Map<String,Object> parameter);
 
     /**
+     *  查询出创建文章和类型的关联关系的最新id
+     * @return
+     */
+    int findMaxTypeId();
+
+    /**
      * 删除文章和类型的关联关系
      * @param articleId
      * @return
      */
     int deleteRelationTypeWithArticle(int articleId);
+
+    /**
+     * 查询文章和关联试题
+     * @param articleId
+     * @return
+     */
+    List<Map<String,Object>> getQuestionByArticle(int articleId);
+
+    /**
+     * 创建文章和试题的关联关系
+     * @param parameter
+     * @return
+     */
+    int createRelationQuestionWithArticle(Map<String,Object> parameter);
+
+    /**
+     *  查询出创建文章和试题的关联关系的最新id
+     * @return
+     */
+    int findMaxAqId();
 
 }

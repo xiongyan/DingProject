@@ -62,5 +62,19 @@ public interface ArticleService {
      * @return
      */
     Object deleteRelationTypeWithArticle(int articleId);
+
+    /**
+     * 查询文章和关联试题
+     * @param articleId
+     * @return
+     */
+    Object getQuestionByArticle(int articleId);
+
+    /**
+     * 创建文章和试题关系
+     * @param articleId
+     * @return
+     */
+    Object createRelationQuestionWithArticle(HttpServletRequest req,int articleId);
 }
 

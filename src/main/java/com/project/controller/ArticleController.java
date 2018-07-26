@@ -97,4 +97,25 @@ public class ArticleController {
     public Object deleteRelationTypeWithArticle(@PathVariable int articleId) {
         return articleService.deleteRelationTypeWithArticle(articleId);
     }
+
+    /**
+     * 查询文章和关联试题
+     * @param articleId
+     * @return
+     */
+    @RequestMapping(value="/article/{articleId}/question",method= RequestMethod.GET)
+    public Object getQuestionByArticle(@PathVariable int articleId) {
+        return articleService.getQuestionByArticle(articleId);
+    }
+
+    /**
+     * 创建文章和试题关系
+     * @param articleId
+     * @return
+     */
+    @RequestMapping(value="/article/{articleId}/question",method= RequestMethod.POST)
+    public Object createRelationQuestionWithArticle(HttpServletRequest req,@PathVariable int articleId) {
+        return articleService.createRelationQuestionWithArticle(req, articleId);
+    }
+
 }

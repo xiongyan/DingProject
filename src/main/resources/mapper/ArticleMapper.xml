@@ -123,9 +123,36 @@
         (#{article_id},#{type_id})
     </insert>
 
+    <select id="findMaxTypeId" resultType="int">
+      select max(at_id) from sw_article_type;
+    </select>
+
     <!--删除article-->
     <delete id="deleteRelationTypeWithArticle" parameterType="int">
         DELETE FROM sw_article_type WHERE article_id = #{articleId}
     </delete>
+
+    <select id="getQuestionByArticle" resultType="hashmap" parameterType="int">
+        select b.eq_id as eq_id,eqt_id,tags,question,level,op_a,op_b,op_c,op_d,answer,user_id,created,b.aq_id as aq_id,b.article_id as article_id
+        from sw_exam_question
+        inner join(
+        	select aq_id,article_id,eq_id
+            from sw_article_question
+            where article_id = #{articleId}
+        )b
+        on sw_exam_question.eq_id = b.eq_id
+    </select>
+
+    <!-- 新增article与type关系 -->
+    <insert id="createRelationQuestionWithArticle" parameterType="hashmap" >
+        insert into sw_article_question
+        (article_id,eq_id)
+        values
+        (#{article_id},#{eq_id})
+    </insert>
+
+    <select id="findMaxAqId" resultType="int">
+        select max(aq_id) from sw_article_question;
+    </select>
 
 </mapper>

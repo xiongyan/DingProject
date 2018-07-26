@@ -212,6 +212,7 @@ public class ArticleServiceImpl implements ArticleService {
      */
     public Object createRelationTypeWithArticle(HttpServletRequest req, int articleId) {
         try{
+            Map<String,Object> res = new HashMap<>();
             JsonUtil obj = new JsonUtil(requestUtil.getBody(req));
             int type_id = obj.getIntOrElse("type_id",-1);
             if(type_id != -1){
@@ -220,7 +221,10 @@ public class ArticleServiceImpl implements ArticleService {
                 parameter.put("article_id",articleId);
                 int flag = articleDao.createRelationTypeWithArticle(parameter);
                 if(flag == 1){
-                    return ResultUtil.success("成功");
+                    int id = articleDao.findMaxTypeId();
+                    res.put("aq_id",id);
+                    res.put("errcode",0);
+                    return res;
                 }else {
                     return ResultUtil.error(500,"创建关系失败");
                 }
@@ -239,12 +243,65 @@ public class ArticleServiceImpl implements ArticleService {
      * @return
      */
     public Object deleteRelationTypeWithArticle(int articleId) {
+        Map<String,Object> res = new HashMap<>();
         try{
             int flag = articleDao.deleteRelationTypeWithArticle(articleId);
-            if(flag > 0){
-                return ResultUtil.success("删除成功");
-            }else {
-                return ResultUtil.success("关联关系已经删除完");
+            res.put("errcode",0);
+            return res;
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResultUtil.error(500,"内部异常");
+        }
+    }
+
+    /**
+     * 查询文章和关联试题
+     * @param articleId
+     * @return
+     */
+    public Object getQuestionByArticle(int articleId) {
+        Map<String,Object> res = new HashMap<>();
+        List<Map<String,Object>> list;
+        try {
+            list = articleDao.getQuestionByArticle(articleId);
+            res.put("total",list.size());
+            if(list.size() == 0){
+                res.put("rows",new ArrayList<>());
+            }else{
+                res.put("rows",list);
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return res;
+    }
+
+    /**
+     * 创建文章和试题关系
+     * @param articleId
+     * @return
+     */
+    public Object createRelationQuestionWithArticle(HttpServletRequest req,int articleId) {
+        try{
+            Map<String,Object> res = new HashMap<>();
+            JsonUtil obj = new JsonUtil(requestUtil.getBody(req));
+            int eq_id = obj.getIntOrElse("eq_id",-1);
+            if(eq_id != -1){
+                Map<String,Object> parameter = new HashMap<>();
+                parameter.put("eq_id",eq_id);
+                parameter.put("article_id",articleId);
+                int flag = articleDao.createRelationQuestionWithArticle(parameter);
+                if(flag == 1){
+                    int id = articleDao.findMaxAqId();
+                    res.put("aq_id",id);
+                    res.put("errcode",0);
+                    return res;
+                }else {
+                    return ResultUtil.error(500,"创建关系失败");
+                }
+            }else{
+                return ResultUtil.error(500,"eq_id参数异常");
             }
         }catch (Exception e){
             e.printStackTrace();
