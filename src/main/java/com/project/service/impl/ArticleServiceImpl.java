@@ -308,4 +308,21 @@ public class ArticleServiceImpl implements ArticleService {
             return ResultUtil.error(500,"内部异常");
         }
     }
+
+    /**
+     * 删除文章和试题的关联关系
+     * @param articleId
+     * @return
+     */
+    public Object deleteRelationQuestionWithArticle(int articleId) {
+        Map<String,Object> res = new HashMap<>();
+        try{
+            int flag = articleDao.deleteRelationQuestionWithArticle(articleId);
+            res.put("errcode",0);
+            return res;
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResultUtil.error(500,"内部异常");
+        }
+    }
 }

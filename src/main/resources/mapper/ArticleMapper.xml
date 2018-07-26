@@ -155,4 +155,9 @@
         select max(aq_id) from sw_article_question;
     </select>
 
+    <!--删除article-->
+    <delete id="deleteRelationQuestionWithArticle" parameterType="int">
+        DELETE FROM sw_article_question WHERE article_id = #{articleId}
+    </delete>
+
 </mapper>

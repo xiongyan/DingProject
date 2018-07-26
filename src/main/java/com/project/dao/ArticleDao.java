@@ -93,4 +93,11 @@ public interface ArticleDao {
      */
     int findMaxAqId();
 
+    /**
+     * 删除文章和试题的关联关系
+     * @param articleId
+     * @return
+     */
+    int deleteRelationQuestionWithArticle(int articleId);
+
 }

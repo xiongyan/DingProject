@@ -118,4 +118,13 @@ public class ArticleController {
         return articleService.createRelationQuestionWithArticle(req, articleId);
     }
 
+    /**
+     * 删除文章和试题的关联关系
+     * @param articleId
+     * @return
+     */
+    @RequestMapping(value="/article/{articleId}/question",method= RequestMethod.DELETE)
+    public Object deleteRelationQuestionWithArticle(@PathVariable int articleId) {
+        return articleService.deleteRelationQuestionWithArticle(articleId);
+    }
 }
